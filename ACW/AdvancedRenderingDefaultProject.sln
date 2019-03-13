@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AdvancedRenderingDefaultProject", "AdvancedRenderingDefaultProject\AdvancedRenderingDefaultProject.vcxproj", "{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Debug|ARM.ActiveCfg = Debug|ARM
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Debug|ARM.Build.0 = Debug|ARM
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Debug|ARM.Deploy.0 = Debug|ARM
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Debug|x64.ActiveCfg = Debug|x64
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Debug|x64.Build.0 = Debug|x64
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Debug|x64.Deploy.0 = Debug|x64
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Debug|x86.ActiveCfg = Debug|Win32
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Debug|x86.Build.0 = Debug|Win32
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Debug|x86.Deploy.0 = Debug|Win32
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Release|ARM.ActiveCfg = Release|ARM
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Release|ARM.Build.0 = Release|ARM
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Release|ARM.Deploy.0 = Release|ARM
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Release|x64.ActiveCfg = Release|x64
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Release|x64.Build.0 = Release|x64
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Release|x64.Deploy.0 = Release|x64
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Release|x86.ActiveCfg = Release|Win32
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Release|x86.Build.0 = Release|Win32
+		{ED8BBDAC-C6BB-455C-9BDF-5C87A4022792}.Release|x86.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {079BE786-18C1-4A69-BADD-C21828A18A57}
+	EndGlobalSection
+EndGlobal
