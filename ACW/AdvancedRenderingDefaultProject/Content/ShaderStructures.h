@@ -10,6 +10,11 @@ namespace AdvancedRenderingDefaultProject
 		DirectX::XMFLOAT4X4 projection;
 	};
 
+	struct VertexPosition
+	{
+		DirectX::XMFLOAT3 pos;
+	};
+
 	// Used to send per-vertex data to the vertex shader.
 	struct VertexPositionColor
 	{

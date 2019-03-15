@@ -10,14 +10,14 @@
     <PackageArchitecture>x86</PackageArchitecture>
     <PackageIdentityName>4c3631c8-a2db-4e9c-a6b8-f1c03af2c6db</PackageIdentityName>
     <PackageIdentityPublisher>CN=464642</PackageIdentityPublisher>
-    <IntermediateOutputPath>D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\AdvancedRenderingDefaultProject\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Debug\</IntermediateOutputPath>
     <RemoteDeploymentType>CopyToDevice</RemoteDeploymentType>
     <PackageRegistrationPath>
     </PackageRegistrationPath>
     <RemoveNonLayoutFiles>false</RemoveNonLayoutFiles>
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
-    <LayoutDir>D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\Debug\AdvancedRenderingDefaultProject\AppX</LayoutDir>
+    <LayoutDir>D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\AppX</LayoutDir>
     <RegisteredManifestChecksum>79BA76EAE22A12848BEC9B4D1CB901EE5C8B9788F1CFE51D31BC5A322D07CC54</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>4c3631c8-a2db-4e9c-a6b8-f1c03af2c6db_1.0.0.0_x86__nbwwd1xm27y0p</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>4c3631c8-a2db-4e9c-a6b8-f1c03af2c6db_nbwwd1xm27y0p!App</RegisteredUserModeAppID>
@@ -26,82 +26,90 @@
     <RegisteredVersion>1.0.0.0</RegisteredVersion>
   </PropertyGroup>
   <ItemGroup>
-    <AppXManifest Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\Debug\AdvancedRenderingDefaultProject\AppxManifest.xml">
+    <AppXManifest Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2019-03-12T17:38:18.594</Modified>
+      <Modified>2019-03-15T17:26:08.965</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\Debug\AdvancedRenderingDefaultProject\AdvancedRenderingDefaultProject.exe">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\AdvancedRenderingDefaultProject.exe">
       <PackagePath>AdvancedRenderingDefaultProject.exe</PackagePath>
-      <Modified>2019-03-13T18:15:52.900</Modified>
+      <Modified>2019-03-15T18:35:39.990</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\Debug\AdvancedRenderingDefaultProject\AdvancedRenderingDefaultProject.winmd">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\AdvancedRenderingDefaultProject.winmd">
       <PackagePath>AdvancedRenderingDefaultProject.winmd</PackagePath>
       <Modified>2019-03-03T18:14:00.522</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\AdvancedRenderingDefaultProject\Assets\LockScreenLogo.scale-200.png">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Assets\grassBlade.dds">
+      <PackagePath>Assets\grassBlade.dds</PackagePath>
+      <Modified>2019-03-13T19:12:30.664</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Assets\LockScreenLogo.scale-200.png">
       <PackagePath>Assets\LockScreenLogo.scale-200.png</PackagePath>
       <Modified>2018-01-26T09:31:33.825</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\AdvancedRenderingDefaultProject\Assets\SplashScreen.scale-200.png">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Assets\SplashScreen.scale-200.png">
       <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-01-26T09:31:33.825</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\AdvancedRenderingDefaultProject\Assets\Square150x150Logo.scale-200.png">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Assets\Square150x150Logo.scale-200.png">
       <PackagePath>Assets\Square150x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-01-26T09:31:33.825</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\AdvancedRenderingDefaultProject\Assets\Square44x44Logo.scale-200.png">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Assets\Square44x44Logo.scale-200.png">
       <PackagePath>Assets\Square44x44Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-01-26T09:31:33.825</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\AdvancedRenderingDefaultProject\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
       <PackagePath>Assets\Square44x44Logo.targetsize-24_altform-unplated.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-01-26T09:31:33.825</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\AdvancedRenderingDefaultProject\Assets\StoreLogo.png">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Assets\StoreLogo.png">
       <PackagePath>Assets\StoreLogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-01-26T09:31:33.825</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\AdvancedRenderingDefaultProject\Assets\Wide310x150Logo.scale-200.png">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Assets\Wide310x150Logo.scale-200.png">
       <PackagePath>Assets\Wide310x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2018-01-26T09:31:33.825</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\Debug\AdvancedRenderingDefaultProject\SamplePixelShader.cso">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\SamplePixelShader.cso">
       <PackagePath>SamplePixelShader.cso</PackagePath>
-      <Modified>2019-03-13T16:03:48.843</Modified>
+      <Modified>2019-03-13T19:01:37.511</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\Debug\AdvancedRenderingDefaultProject\SampleVertexShader.cso">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\SampleVertexShader.cso">
       <PackagePath>SampleVertexShader.cso</PackagePath>
-      <Modified>2019-03-13T16:34:44.679</Modified>
+      <Modified>2019-03-13T19:01:37.657</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\Debug\AdvancedRenderingDefaultProject\DomainShader.cso">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\DomainShader.cso">
       <PackagePath>DomainShader.cso</PackagePath>
-      <Modified>2019-03-12T18:03:06.860</Modified>
+      <Modified>2019-03-13T19:01:37.837</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\Debug\AdvancedRenderingDefaultProject\GrassParticleGS.cso">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\GrassParticleGS.cso">
       <PackagePath>GrassParticleGS.cso</PackagePath>
-      <Modified>2019-03-13T18:19:22.480</Modified>
+      <Modified>2019-03-15T18:43:43.138</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\Debug\AdvancedRenderingDefaultProject\HullShader.cso">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\HullShader.cso">
       <PackagePath>HullShader.cso</PackagePath>
-      <Modified>2019-03-12T17:38:10.814</Modified>
+      <Modified>2019-03-13T19:01:38.179</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\VertexShaderPositionOnly.cso">
+      <PackagePath>VertexShaderPositionOnly.cso</PackagePath>
+      <Modified>2019-03-15T17:34:16.886</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.15063.0\\redist\Debug\x86\ucrtbased.dll">
       <PackagePath>ucrtbased.dll</PackagePath>
       <Modified>2017-09-29T19:11:00.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\ACW\Debug\AdvancedRenderingDefaultProject\resources.pri">
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2019-03-12T17:38:18.080</Modified>
+      <Modified>2019-03-15T17:26:08.384</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

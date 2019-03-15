@@ -1,4 +1,5 @@
-Texture2D grassTex;
+Texture2D grassTex : register (t0);
+SamplerState Sampler;
 
 // A constant buffer that stores the three basic column-major matrices for composing geometry.
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
@@ -40,13 +41,16 @@ void GS_main(point GeometryShaderInput input[1], inout TriangleStream<PixelShade
 	};
 
 	// Tri1
-	float quadSize = 0.1f;
+	float quadSize = 0.02f;
+
+	float4 texColor = grassTex.SampleLevel(Sampler, 0.0f, 0.0f);
 
 	// V1
 	output.pos = vPos + float4(quadSize * g_positions[0], 0.0f);
 	output.pos = mul(output.pos, projection);
 
-	output.color = input[0].color;
+	//output.color = input[0].color;
+	output.color = texColor;
 
 	OutputStream.Append(output);
 
@@ -54,7 +58,8 @@ void GS_main(point GeometryShaderInput input[1], inout TriangleStream<PixelShade
 	output.pos = vPos + float4(quadSize * g_positions[1], 0.0f);
 	output.pos = mul(output.pos, projection);
 
-	output.color = input[0].color;
+	//output.color = input[0].color;
+	output.color = texColor;
 
 	OutputStream.Append(output);
 
@@ -63,7 +68,8 @@ void GS_main(point GeometryShaderInput input[1], inout TriangleStream<PixelShade
 	output.pos = vPos + float4(quadSize * g_positions[2], 0.0f);
 	output.pos = mul(output.pos, projection);
 
-	output.color = input[0].color;
+	//output.color = input[0].color;
+	output.color = texColor;
 
 	OutputStream.Append(output);
 
@@ -71,7 +77,8 @@ void GS_main(point GeometryShaderInput input[1], inout TriangleStream<PixelShade
 	output.pos = vPos + float4(quadSize * g_positions[3], 0.0f);
 	output.pos = mul(output.pos, projection);
 
-	output.color = input[0].color;
+	//output.color = input[0].color;
+	output.color = texColor;
 
 	OutputStream.Append(output);
 }

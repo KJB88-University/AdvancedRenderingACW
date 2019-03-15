@@ -83,6 +83,9 @@
     <Image Include="Assets\StoreLogo.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="Assets\grassBlade.dds">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -98,6 +101,9 @@
       <Filter>Content</Filter>
     </FxCompile>
     <FxCompile Include="GrassParticleGS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShaderPositionOnly.hlsl">
       <Filter>Content</Filter>
     </FxCompile>
   </ItemGroup>

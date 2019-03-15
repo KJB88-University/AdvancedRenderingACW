@@ -32,18 +32,25 @@ namespace AdvancedRenderingDefaultProject
 		// Direct3D resources for cube geometry.
 		Microsoft::WRL::ComPtr<ID3D11InputLayout>	m_inputLayout;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_vertexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_grassPointsLayout;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_indexBuffer;
-		Microsoft::WRL::ComPtr<ID3D11VertexShader>	m_vertexShader;
-		Microsoft::WRL::ComPtr<ID3D11PixelShader>	m_pixelShader;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_constantBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_grassBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_grassIndexBuffer;
+		uint32 m_grassIndexCount;
+
+		Microsoft::WRL::ComPtr<ID3D11VertexShader>	m_vertexShader;
+		Microsoft::WRL::ComPtr<ID3D11VertexShader>	m_grassVertexShader;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader>	m_pixelShader;
 		Microsoft::WRL::ComPtr<ID3D11HullShader> m_hullShader;
 		Microsoft::WRL::ComPtr<ID3D11DomainShader> m_domainShader;
-		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterState;
-
-		CD3D11_RASTERIZER_DESC m_filledRasterDesc;
-		CD3D11_RASTERIZER_DESC m_wireframeRasterDesc;
-
 		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_grassGS;
+
+		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterState;
+		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_filledRasterState;
+
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_grassTexture;
+		Microsoft::WRL::ComPtr<ID3D11SamplerState> m_sampler;
 
 		// System resources for cube geometry.
 		ModelViewProjectionConstantBuffer	m_constantBufferData;
