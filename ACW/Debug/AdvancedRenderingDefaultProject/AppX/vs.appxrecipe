@@ -29,17 +29,17 @@
     <AppXManifest Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2019-03-15T17:26:08.965</Modified>
+      <Modified>2019-03-16T15:04:37.751</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\AdvancedRenderingDefaultProject.exe">
       <PackagePath>AdvancedRenderingDefaultProject.exe</PackagePath>
-      <Modified>2019-03-15T18:35:39.990</Modified>
+      <Modified>2019-03-16T17:20:37.609</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\AdvancedRenderingDefaultProject.winmd">
       <PackagePath>AdvancedRenderingDefaultProject.winmd</PackagePath>
-      <Modified>2019-03-03T18:14:00.522</Modified>
+      <Modified>2019-03-16T15:04:36.209</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Assets\grassBlade.dds">
       <PackagePath>Assets\grassBlade.dds</PackagePath>
@@ -81,27 +81,27 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\SamplePixelShader.cso">
       <PackagePath>SamplePixelShader.cso</PackagePath>
-      <Modified>2019-03-13T19:01:37.511</Modified>
+      <Modified>2019-03-16T15:04:25.919</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\SampleVertexShader.cso">
       <PackagePath>SampleVertexShader.cso</PackagePath>
-      <Modified>2019-03-13T19:01:37.657</Modified>
+      <Modified>2019-03-16T15:06:27.413</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\DomainShader.cso">
       <PackagePath>DomainShader.cso</PackagePath>
-      <Modified>2019-03-13T19:01:37.837</Modified>
+      <Modified>2019-03-16T15:04:26.304</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\GrassParticleGS.cso">
       <PackagePath>GrassParticleGS.cso</PackagePath>
-      <Modified>2019-03-15T18:43:43.138</Modified>
+      <Modified>2019-03-16T18:13:16.524</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\HullShader.cso">
       <PackagePath>HullShader.cso</PackagePath>
-      <Modified>2019-03-13T19:01:38.179</Modified>
+      <Modified>2019-03-16T15:04:26.755</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\VertexShaderPositionOnly.cso">
       <PackagePath>VertexShaderPositionOnly.cso</PackagePath>
-      <Modified>2019-03-15T17:34:16.886</Modified>
+      <Modified>2019-03-16T16:00:43.731</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.15063.0\\redist\Debug\x86\ucrtbased.dll">
       <PackagePath>ucrtbased.dll</PackagePath>
@@ -109,7 +109,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2019-03-15T17:26:08.384</Modified>
+      <Modified>2019-03-16T15:04:37.555</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

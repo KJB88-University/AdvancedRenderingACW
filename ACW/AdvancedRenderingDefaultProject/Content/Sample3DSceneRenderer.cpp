@@ -68,12 +68,16 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 // Called once per frame, rotates the cube and calculates the model and view matrices.
 void Sample3DSceneRenderer::Update(DX::StepTimer const& timer)
 {
+	double time = timer.GetTotalSeconds();
+	m_timeBufferData.deltaTime = (float)time;
+	XMStoreFloat3(&m_timeBufferData.padding, XMVECTORF32{ 0.0f, 0.0f, 0.0f });
+
 	if (!m_tracking)
 	{
 		// Convert degrees to radians, then convert seconds to rotation angle
 		float radiansPerSecond = XMConvertToRadians(m_degreesPerSecond);
 		double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
-		float radians = static_cast<float>(fmod(totalRotation, XM_2PI));
+		float radians = static_cast<float>(fmod(totalRotation * 0.5f, XM_2PI));
 
 		Rotate(radians);
 	}
@@ -143,6 +147,8 @@ void Sample3DSceneRenderer::Render()
 	context->DrawIndexed(m_indexCount, 0, 0);
 
 	// PARTICLES
+	context->UpdateSubresource1(m_timeBuffer.Get(), 0, NULL, &m_timeBufferData, 0, 0, 0);
+
 	stride = sizeof(VertexPosition);
 	offset = 0;
 	context->IASetVertexBuffers(0, 1, m_grassBuffer.GetAddressOf(), &stride, &offset);
@@ -157,13 +163,18 @@ void Sample3DSceneRenderer::Render()
 	context->DSSetShader(NULL, nullptr, 0);
 
 	context->GSSetShader(m_grassGS.Get(), nullptr, 0);
-	context->GSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+	context->GSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
+	context->GSSetConstantBuffers(1, 1, m_timeBuffer.GetAddressOf());
 	context->GSSetShaderResources(0, 1, m_grassTexture.GetAddressOf());
 	context->GSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
 	context->DrawIndexed(m_grassIndexCount, 0, 0);
+
+	// SNAKE POLYLINE
+	context->VSSetShader(m_grassVertexShader.Get(), nullptr, 0);
+	context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 }
 
 void Sample3DSceneRenderer::CreateDeviceDependentResources()
@@ -304,6 +315,15 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				fileData.size(),
 				nullptr,
 				&m_grassGS
+			)
+		);
+
+		CD3D11_BUFFER_DESC timeBufferDesc(sizeof(TimeBuffer), D3D11_BIND_CONSTANT_BUFFER);
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateBuffer(
+				&timeBufferDesc,
+				nullptr,
+				&m_timeBuffer
 			)
 		);
 

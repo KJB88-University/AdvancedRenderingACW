@@ -106,5 +106,11 @@
     <FxCompile Include="VertexShaderPositionOnly.hlsl">
       <Filter>Content</Filter>
     </FxCompile>
+    <FxCompile Include="SnakeGS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="SnakeVS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

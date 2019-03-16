@@ -29,32 +29,42 @@ namespace AdvancedRenderingDefaultProject
 		// Cached pointer to device resources.
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
-		// Direct3D resources for cube geometry.
+		// Floor Quad Tesselation
 		Microsoft::WRL::ComPtr<ID3D11InputLayout>	m_inputLayout;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_vertexBuffer;
-		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_grassPointsLayout;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_indexBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_constantBuffer;
+		Microsoft::WRL::ComPtr<ID3D11VertexShader>	m_vertexShader;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader>	m_pixelShader;
+		Microsoft::WRL::ComPtr<ID3D11HullShader> m_hullShader;
+		Microsoft::WRL::ComPtr<ID3D11DomainShader> m_domainShader;
+		uint32	m_indexCount;
+
+		// Particle Grass
+		Microsoft::WRL::ComPtr<ID3D11VertexShader>	m_grassVertexShader;
+		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_grassGS;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_grassTexture;
+		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_grassPointsLayout;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_grassBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_grassIndexBuffer;
 		uint32 m_grassIndexCount;
 
-		Microsoft::WRL::ComPtr<ID3D11VertexShader>	m_vertexShader;
-		Microsoft::WRL::ComPtr<ID3D11VertexShader>	m_grassVertexShader;
-		Microsoft::WRL::ComPtr<ID3D11PixelShader>	m_pixelShader;
-		Microsoft::WRL::ComPtr<ID3D11HullShader> m_hullShader;
-		Microsoft::WRL::ComPtr<ID3D11DomainShader> m_domainShader;
-		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_grassGS;
+		// Snake Polyline
+		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_snakeVS; // TODO
+		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_snakeGS; // TODO
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_snakeTexture; // TODO
 
+		// Constant Buffers
+		ModelViewProjectionConstantBuffer	m_constantBufferData;
+		TimeBuffer m_timeBufferData;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_constantBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_timeBuffer;
+
+		// Rasterizer States
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterState;
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_filledRasterState;
 
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_grassTexture;
+		// Samplers
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> m_sampler;
-
-		// System resources for cube geometry.
-		ModelViewProjectionConstantBuffer	m_constantBufferData;
-		uint32	m_indexCount;
 
 		// Variables used with the rendering loop.
 		bool	m_loadingComplete;

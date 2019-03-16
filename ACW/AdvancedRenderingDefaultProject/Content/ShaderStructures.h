@@ -10,6 +10,12 @@ namespace AdvancedRenderingDefaultProject
 		DirectX::XMFLOAT4X4 projection;
 	};
 
+	struct TimeBuffer
+	{
+		float deltaTime;
+		DirectX::XMFLOAT3 padding;
+	};
+
 	struct VertexPosition
 	{
 		DirectX::XMFLOAT3 pos;

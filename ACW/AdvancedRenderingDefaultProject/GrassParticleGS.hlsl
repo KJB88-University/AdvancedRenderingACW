@@ -9,10 +9,15 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
 	matrix projection;
 };
 
+cbuffer TimeBuffer : register(b1)
+{
+	float deltaTime;
+	float3 padding;
+};
+
 struct GeometryShaderInput
 {
 	float4 pos : SV_POSITION;
-	float3 color : COLOR0;
 };
 
 struct PixelShaderInput
@@ -40,13 +45,44 @@ void GS_main(point GeometryShaderInput input[1], inout TriangleStream<PixelShade
 	float3(1, 1, 0)
 	};
 
+	//static const float3 g_positions[3] =
+	//{
+	//	float3(0, 2, 0),
+	//	float3(0.5, -0.5, 0),
+	//	float3(-0.5, -0.5, 0)
+	//};
+
 	// Tri1
-	float quadSize = 0.02f;
+	float size = 0.02f;
+	float windSpeed = 1.0f;
+	float waveAmplitude = 0.1f;
+	float dampening = 0.25f;
 
 	float4 texColor = grassTex.SampleLevel(Sampler, 0.0f, 0.0f);
 
 	// V1
-	output.pos = vPos + float4(quadSize * g_positions[0], 0.0f);
+	output.pos = vPos + float4(size * g_positions[0], 0.0f);
+	output.pos = mul(output.pos, projection);
+
+	output.color = texColor;
+
+	OutputStream.Append(output);
+
+	// V2
+	output.pos = vPos + float4(size * g_positions[1], 0.0f);
+
+	// Apply animation
+	output.pos.z += sin(windSpeed * deltaTime)  * waveAmplitude * dampening;
+	output.pos.x += cos(windSpeed * deltaTime) * waveAmplitude * dampening;
+
+	output.pos = mul(output.pos, projection);
+
+	output.color = texColor;
+
+	OutputStream.Append(output);
+
+	// V3
+	output.pos = vPos + float4(size * g_positions[2], 0.0f);
 	output.pos = mul(output.pos, projection);
 
 	//output.color = input[0].color;
@@ -55,29 +91,14 @@ void GS_main(point GeometryShaderInput input[1], inout TriangleStream<PixelShade
 	OutputStream.Append(output);
 
 	// V2
-	output.pos = vPos + float4(quadSize * g_positions[1], 0.0f);
+	output.pos = vPos + float4(size * g_positions[3], 0.0f);
+
+	// Apply animation
+	output.pos.z += sin(windSpeed * deltaTime)  * waveAmplitude * dampening;
+	output.pos.x += cos(windSpeed * deltaTime) * waveAmplitude * dampening;
+
 	output.pos = mul(output.pos, projection);
 
-	//output.color = input[0].color;
-	output.color = texColor;
-
-	OutputStream.Append(output);
-
-	// Tri2
-	// V1
-	output.pos = vPos + float4(quadSize * g_positions[2], 0.0f);
-	output.pos = mul(output.pos, projection);
-
-	//output.color = input[0].color;
-	output.color = texColor;
-
-	OutputStream.Append(output);
-
-	// V2
-	output.pos = vPos + float4(quadSize * g_positions[3], 0.0f);
-	output.pos = mul(output.pos, projection);
-
-	//output.color = input[0].color;
 	output.color = texColor;
 
 	OutputStream.Append(output);
