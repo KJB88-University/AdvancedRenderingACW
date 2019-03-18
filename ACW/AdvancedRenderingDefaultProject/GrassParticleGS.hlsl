@@ -27,7 +27,7 @@ struct PixelShaderInput
 	float2 uv : TEXCOORD0;
 };
 
-[maxvertexcount(6)]
+[maxvertexcount(4)]
 void GS_main(point GeometryShaderInput input[1], inout TriangleStream<PixelShaderInput> OutputStream)
 {
 	// Init and default

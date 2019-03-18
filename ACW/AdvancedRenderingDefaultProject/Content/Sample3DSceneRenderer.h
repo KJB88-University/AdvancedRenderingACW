@@ -49,9 +49,21 @@ namespace AdvancedRenderingDefaultProject
 		uint32 m_grassIndexCount;
 
 		// Snake Polyline
-		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_snakeVS; // TODO
-		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_snakeGS; // TODO
+		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_snakeVS;
+		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_snakeGS;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_snakeTexture; // TODO
+		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_snakePointsLayout;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_snakeBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_snakeIndexBuffer;
+		uint32 m_snakeIndexCount;
+
+		// Implicit Objects
+		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_implicitVS;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> m_implicitPS;
+		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_implicitInput;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_implicitBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_implicitIndexBuffer;
+		uint32 m_implicitIndexCount;
 
 		// Constant Buffers
 		ModelViewProjectionConstantBuffer	m_constantBufferData;
@@ -60,7 +72,7 @@ namespace AdvancedRenderingDefaultProject
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_timeBuffer;
 
 		// Rasterizer States
-		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterState;
+		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_wireframeRasterState;
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_filledRasterState;
 
 		// Samplers
