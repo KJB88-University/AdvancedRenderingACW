@@ -68,8 +68,11 @@ namespace AdvancedRenderingDefaultProject
 		// Constant Buffers
 		ModelViewProjectionConstantBuffer	m_constantBufferData;
 		TimeBuffer m_timeBufferData;
+		CameraBuffer m_cameraBufferData;
+
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_constantBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_timeBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_cameraBuffer;
 
 		// Rasterizer States
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_wireframeRasterState;

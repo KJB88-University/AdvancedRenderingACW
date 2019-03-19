@@ -40,12 +40,14 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 	// made to the swap chain render target. For draw calls to other targets,
 	// this transform should not be applied.
 
+	float nearPlane = 0.01f;
+	float farPlane = 1000.0f;
 	// This sample makes use of a right-handed coordinate system using row-major matrices.
 	XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(
 		fovAngleY,
 		aspectRatio,
-		0.01f,
-		100.0f
+		nearPlane,
+		farPlane
 	);
 
 	XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
@@ -58,9 +60,16 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 	);
 
 	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-	static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
+	static const XMVECTORF32 eye = { 0.0f, 0.0f, 15.0f, 1.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
+
+	static const XMVECTORF32 clipPlanes = { nearPlane, farPlane, 0.0f, 0.0f };
+
+	// Load the camera CB
+	XMStoreFloat4(&m_cameraBufferData.eyePos, eye);
+	XMStoreFloat4(&m_cameraBufferData.lookAt, at);
+	XMStoreFloat4(&m_cameraBufferData.clipPlanes, clipPlanes);
 
 	XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(eye, at, up)));
 }
@@ -123,6 +132,7 @@ void Sample3DSceneRenderer::Render()
 	auto context = m_deviceResources->GetD3DDeviceContext();
 	context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
 	context->UpdateSubresource1(m_timeBuffer.Get(), 0, NULL, &m_timeBufferData, 0, 0, 0);
+	context->UpdateSubresource1(m_cameraBuffer.Get(), 0, NULL, &m_cameraBufferData, 0, 0, 0);
 
 	UINT stride = sizeof(VertexPositionColor);
 	UINT offset = 0;
@@ -218,6 +228,7 @@ void Sample3DSceneRenderer::Render()
 	context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
 	context->PSSetShader(m_implicitPS.Get(), nullptr, 0);
+	context->PSSetConstantBuffers(0, 1, m_cameraBuffer.GetAddressOf());
 
 	context->DSSetShader(NULL, nullptr, 0);
 	context->HSSetShader(NULL, nullptr, 0);
@@ -858,6 +869,15 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		)
 	);
 
+	CD3D11_BUFFER_DESC cameraBufferDesc(sizeof(CameraBuffer), D3D11_BIND_CONSTANT_BUFFER);
+	DX::ThrowIfFailed(
+		m_deviceResources->GetD3DDevice()->CreateBuffer(
+			&cameraBufferDesc,
+			nullptr,
+			&m_cameraBuffer
+		)
+	);
+
 	CD3D11_BUFFER_DESC timeBufferDesc(sizeof(TimeBuffer), D3D11_BIND_CONSTANT_BUFFER);
 	DX::ThrowIfFailed(
 		m_deviceResources->GetD3DDevice()->CreateBuffer(
@@ -888,6 +908,7 @@ void Sample3DSceneRenderer::ReleaseDeviceDependentResources()
 	// BUFFERS
 	m_constantBuffer.Reset();
 	m_timeBuffer.Reset();
+	m_cameraBuffer.Reset();
 
 	// COMMON
 	m_pixelShader.Reset();

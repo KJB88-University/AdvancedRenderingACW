@@ -16,6 +16,13 @@ namespace AdvancedRenderingDefaultProject
 		DirectX::XMFLOAT3 padding;
 	};
 
+	struct CameraBuffer
+	{
+		DirectX::XMFLOAT4 eyePos;
+		DirectX::XMFLOAT4 lookAt;
+		DirectX::XMFLOAT4 clipPlanes;
+	};
+
 	struct VertexPosition
 	{
 		DirectX::XMFLOAT3 pos;
