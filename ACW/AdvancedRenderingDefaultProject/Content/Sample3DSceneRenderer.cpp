@@ -72,6 +72,9 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 	XMStoreFloat4(&m_cameraBufferData.clipPlanes, clipPlanes);
 
 	XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(eye, at, up)));
+
+	//// Load the control CB
+	//XMStoreFloat3(&m_controlBufferData.booleans, XMVECTORF32{ m_isRepeating, m_isDeforming, m_isFractal });
 }
 
 // Called once per frame, rotates the cube and calculates the model and view matrices.
@@ -133,6 +136,7 @@ void Sample3DSceneRenderer::Render()
 	context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
 	context->UpdateSubresource1(m_timeBuffer.Get(), 0, NULL, &m_timeBufferData, 0, 0, 0);
 	context->UpdateSubresource1(m_cameraBuffer.Get(), 0, NULL, &m_cameraBufferData, 0, 0, 0);
+	//context->UpdateSubresource1(m_controlBuffer.Get(), 0, NULL, &m_controlBufferData, 0, 0, 0);
 
 	UINT stride = sizeof(VertexPositionColor);
 	UINT offset = 0;
@@ -228,7 +232,8 @@ void Sample3DSceneRenderer::Render()
 	context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
 	context->PSSetShader(m_implicitPS.Get(), nullptr, 0);
-	context->PSSetConstantBuffers(0, 1, m_cameraBuffer.GetAddressOf());
+	context->PSSetConstantBuffers(0, 1, m_timeBuffer.GetAddressOf());
+	context->PSSetConstantBuffers(1, 1, m_controlBuffer.GetAddressOf());
 
 	context->DSSetShader(NULL, nullptr, 0);
 	context->HSSetShader(NULL, nullptr, 0);
@@ -886,6 +891,24 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 			&m_timeBuffer
 		)
 	);
+
+	//CD3D11_BUFFER_DESC controlBufferDesc(sizeof(ControlBuffer), D3D11_BIND_CONSTANT_BUFFER);
+	//DX::ThrowIfFailed(
+	//	m_deviceResources->GetD3DDevice()->CreateBuffer(
+	//		&controlBufferDesc,
+	//		nullptr,
+	//		m_controlBuffer.GetAddressOf()
+	//	)
+	//);
+
+	//CD3D11_BUFFER_DESC controlBufferDesc(sizeof(ControlBuffer), D3D11_BIND_CONSTANT_BUFFER);
+	//DX::ThrowIfFailed(
+	//	m_deviceResources->GetD3DDevice()->CreateBuffer(
+	//		&controlBufferDesc,
+	//		nullptr,
+	//		&m_controlBuffer
+	//	)
+	//);
 
 	// Sampler
 	D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC(D3D11_DEFAULT);

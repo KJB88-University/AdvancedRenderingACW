@@ -69,10 +69,12 @@ namespace AdvancedRenderingDefaultProject
 		ModelViewProjectionConstantBuffer	m_constantBufferData;
 		TimeBuffer m_timeBufferData;
 		CameraBuffer m_cameraBufferData;
+		ControlBuffer m_controlBufferData;
 
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_constantBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_timeBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_cameraBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_controlBuffer;
 
 		// Rasterizer States
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_wireframeRasterState;
@@ -80,6 +82,11 @@ namespace AdvancedRenderingDefaultProject
 
 		// Samplers
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> m_sampler;
+
+		// Control vars
+		float m_isRepeating = 0;
+		float m_isDeforming = 0;
+		float m_isFractal = 0;
 
 		// Variables used with the rendering loop.
 		bool	m_loadingComplete;

@@ -16,6 +16,11 @@ namespace AdvancedRenderingDefaultProject
 		DirectX::XMFLOAT3 padding;
 	};
 
+	struct ControlBuffer
+	{
+		DirectX::XMFLOAT3 booleans;
+	};
+
 	struct CameraBuffer
 	{
 		DirectX::XMFLOAT4 eyePos;
