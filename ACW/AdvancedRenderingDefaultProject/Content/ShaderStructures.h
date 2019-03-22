@@ -18,7 +18,7 @@ namespace AdvancedRenderingDefaultProject
 
 	struct ControlBuffer
 	{
-		DirectX::XMFLOAT3 booleans;
+		DirectX::XMFLOAT4 booleans;
 	};
 
 	struct CameraBuffer

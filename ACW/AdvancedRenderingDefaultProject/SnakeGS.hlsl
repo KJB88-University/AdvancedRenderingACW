@@ -20,34 +20,50 @@ struct GeometryShaderInput
 struct PixelShaderInput
 {
 	float4 pos : SV_POSITION;
-	float3 color : COLOR0;
 	float2 uv : TEXCOORD0;
 };
 
-[maxvertexcount(101)]
-void GS_main(point GeometryShaderInput input[1], inout PointStream<PixelShaderInput> OutputStream)
+[maxvertexcount(112)]
+void GS_main(line GeometryShaderInput input[2], inout TriangleStream<PixelShaderInput> OutputStream)
 {
 	PixelShaderInput output = (PixelShaderInput)0;
-	for (int j = 0; j < 1; j++)
-	{
+
 		for (int i = 0; i < 11; i++)
 		{
 			float angle = 3.14f * 2.0f / 10.0f * i;
-
-			float4 offset = float4(cos(angle) * 0.1f, -sin(angle) * 0.1f, j * 0.1f, 0.0f);
-
+			float4 offset;
+			if (input[0].pos.z < -0.7f)
+			{
+				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.015;
+			}
+			else
+			{
+				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.05f;
+			}
 			output.pos = input[0].pos + offset;
 
 			output.pos = mul(output.pos, model);
 			output.pos = mul(output.pos, view);
 			output.pos = mul(output.pos, projection);
+			OutputStream.Append(output);
 
-			output.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
+			if (input[1].pos.z > 0.1f)
+			{
+				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.05f;
+			}
+			else
+			{
+				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.025f;
+			}
+
+			output.pos = input[1].pos + offset;
+
+			output.pos = mul(output.pos, model);
+			output.pos = mul(output.pos, view);
+			output.pos = mul(output.pos, projection);
+
 			OutputStream.Append(output);
 		}
-
-		OutputStream.RestartStrip();
-	}
 }
 
 

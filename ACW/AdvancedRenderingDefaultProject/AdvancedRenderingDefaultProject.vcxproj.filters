@@ -118,5 +118,8 @@
     <FxCompile Include="ImplicitVS.hlsl">
       <Filter>Content</Filter>
     </FxCompile>
+    <FxCompile Include="SnakePS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

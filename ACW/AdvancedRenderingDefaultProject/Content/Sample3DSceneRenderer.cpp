@@ -60,7 +60,7 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 	);
 
 	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-	static const XMVECTORF32 eye = { 0.0f, 0.0f, 15.0f, 1.0f };
+	static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 1.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
@@ -73,8 +73,12 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 
 	XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(eye, at, up)));
 
-	//// Load the control CB
-	//XMStoreFloat3(&m_controlBufferData.booleans, XMVECTORF32{ m_isRepeating, m_isDeforming, m_isFractal });
+	m_isRepeating = 0;
+	m_isDeforming = 0;
+	m_isFractal = 0;
+
+	// Load the control CB
+	XMStoreFloat4(&m_controlBufferData.booleans, XMVECTORF32{ m_isRepeating, m_isDeforming, m_isFractal, m_isShiny });
 }
 
 // Called once per frame, rotates the cube and calculates the model and view matrices.
@@ -136,110 +140,118 @@ void Sample3DSceneRenderer::Render()
 	context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
 	context->UpdateSubresource1(m_timeBuffer.Get(), 0, NULL, &m_timeBufferData, 0, 0, 0);
 	context->UpdateSubresource1(m_cameraBuffer.Get(), 0, NULL, &m_cameraBufferData, 0, 0, 0);
-	//context->UpdateSubresource1(m_controlBuffer.Get(), 0, NULL, &m_controlBufferData, 0, 0, 0);
+	context->UpdateSubresource1(m_controlBuffer.Get(), 0, NULL, &m_controlBufferData, 0, 0, 0);
 
-	UINT stride = sizeof(VertexPositionColor);
-	UINT offset = 0;
+	UINT stride;
+	UINT offset;
+	if (!m_isImplicit)
+	{
+		stride = sizeof(VertexPositionColor);
+		offset = 0;
 
-	//context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->RSSetState(m_wireframeRasterState.Get());
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		context->RSSetState(m_wireframeRasterState.Get());
 
-	// FLOOR QUAD
+		// FLOOR QUAD
 #pragma region FLOOR
-	//context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
-	//context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
-	//context->IASetInputLayout(m_inputLayout.Get());
+		context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+		context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
+		context->IASetInputLayout(m_inputLayout.Get());
 
-	//context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
-	//context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
-	//context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
-	//context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
+		context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
+		context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+		context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
-	//context->DSSetShader(m_domainShader.Get(), nullptr, 0);
-	//context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
-	//context->HSSetShader(m_hullShader.Get(), nullptr, 0);
+		context->DSSetShader(m_domainShader.Get(), nullptr, 0);
+		context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+		context->HSSetShader(m_hullShader.Get(), nullptr, 0);
 
-	//context->GSSetShader(NULL, nullptr, 0);
-	//context->DrawIndexed(m_indexCount, 0, 0);
+		context->GSSetShader(NULL, nullptr, 0);
+		context->DrawIndexed(m_indexCount, 0, 0);
 #pragma endregion
 
-	// SNAKE POLYLINE
+		// SNAKE POLYLINE
 #pragma region SNAKE
-	//// ia
-	//stride = sizeof(VertexPosition);
-	//offset = 0;
-	//context->IASetVertexBuffers(0, 1, m_snakeBuffer.GetAddressOf(), &stride, &offset);
-	//context->IASetIndexBuffer(m_snakeIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
-	//context->IASetInputLayout(m_snakePointsLayout.Get());
-	//context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//context->RSSetState(m_wireframeRasterState.Get());
+	// ia
+		stride = sizeof(VertexPosition);
+		offset = 0;
+		context->IASetVertexBuffers(0, 1, m_snakeBuffer.GetAddressOf(), &stride, &offset);
+		context->IASetIndexBuffer(m_snakeIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
+		context->IASetInputLayout(m_snakePointsLayout.Get());
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		context->RSSetState(m_wireframeRasterState.Get());
 
-	//// vs
-	//context->VSSetShader(m_snakeVS.Get(), nullptr, 0);
-	//context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+		// vs
+		context->VSSetShader(m_snakeVS.Get(), nullptr, 0);
+		context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
-	//// hs ds clear
-	//context->HSSetShader(NULL, nullptr, 0);
-	//context->DSSetShader(NULL, nullptr, 0);
+		// hs ds clear
+		context->HSSetShader(NULL, nullptr, 0);
+		context->DSSetShader(NULL, nullptr, 0);
 
-	//// gs
-	//context->GSSetShader(m_snakeGS.Get(), nullptr, 0);
-	//context->GSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
-	//context->GSSetConstantBuffers(1, 1, m_timeBuffer.GetAddressOf());
+		// gs
+		context->GSSetShader(m_snakeGS.Get(), nullptr, 0);
+		context->GSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
+		context->GSSetConstantBuffers(1, 1, m_timeBuffer.GetAddressOf());
 
-	//// ps
-	//context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	//context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
-	//context->DrawIndexed(m_snakeIndexCount, 0, 0);
+		// ps
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		context->PSSetShader(m_snakePS.Get(), nullptr, 0);
+		context->DrawIndexed(m_snakeIndexCount, 0, 0);
 #pragma endregion
 
-	// PARTICLES
+		// PARTICLES
 #pragma region PARTICLES
-	//stride = sizeof(VertexPosition);
-	//offset = 0;
-	//context->IASetVertexBuffers(0, 1, m_grassBuffer.GetAddressOf(), &stride, &offset);
-	//context->IASetIndexBuffer(m_grassIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
-	//context->IASetInputLayout(m_grassPointsLayout.Get());
-	//context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//context->RSSetState(m_filledRasterState.Get());
+		stride = sizeof(VertexPosition);
+		offset = 0;
+		context->IASetVertexBuffers(0, 1, m_grassBuffer.GetAddressOf(), &stride, &offset);
+		context->IASetIndexBuffer(m_grassIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
+		context->IASetInputLayout(m_grassPointsLayout.Get());
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		context->RSSetState(m_filledRasterState.Get());
 
-	//context->VSSetShader(m_grassVertexShader.Get(), nullptr, 0);
-	//context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
-	//context->HSSetShader(NULL, nullptr, 0);
-	//context->DSSetShader(NULL, nullptr, 0);
+		context->VSSetShader(m_grassVertexShader.Get(), nullptr, 0);
+		context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+		context->HSSetShader(NULL, nullptr, 0);
+		context->DSSetShader(NULL, nullptr, 0);
 
-	//context->GSSetShader(NULL, nullptr, 0);
-	//context->GSSetShader(m_grassGS.Get(), nullptr, 0);
-	//context->GSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
-	//context->GSSetConstantBuffers(1, 1, m_timeBuffer.GetAddressOf());
-	//context->GSSetShaderResources(0, 1, m_grassTexture.GetAddressOf());
-	//context->GSSetSamplers(0, 1, m_sampler.GetAddressOf());
+		context->GSSetShader(NULL, nullptr, 0);
+		context->GSSetShader(m_grassGS.Get(), nullptr, 0);
+		context->GSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
+		context->GSSetConstantBuffers(1, 1, m_timeBuffer.GetAddressOf());
+		context->GSSetShaderResources(0, 1, m_grassTexture.GetAddressOf());
+		context->GSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
-	//context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-	//context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
-	//context->DrawIndexed(m_grassIndexCount, 0, 0);
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+		context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+		context->DrawIndexed(m_grassIndexCount, 0, 0);
 #pragma endregion
+	}
+	else
+	{
+		// PS IMPLICITS
+		stride = sizeof(VertexPositionColor);
+		offset = 0;
+		context->RSSetState(m_filledRasterState.Get());
+		context->IASetVertexBuffers(0, 1, m_implicitBuffer.GetAddressOf(), &stride, &offset);
+		context->IASetIndexBuffer(m_implicitIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
+		context->IASetInputLayout(m_implicitInput.Get());
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		context->VSSetShader(m_implicitVS.Get(), nullptr, 0);
+		context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
-	// PS IMPLICITS
-	stride = sizeof(VertexPositionColor);
-	offset = 0;
-	context->RSSetState(m_filledRasterState.Get());
-	context->IASetVertexBuffers(0, 1, m_implicitBuffer.GetAddressOf(), &stride, &offset);
-	context->IASetIndexBuffer(m_implicitIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
-	context->IASetInputLayout(m_implicitInput.Get());
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->VSSetShader(m_implicitVS.Get(), nullptr, 0);
-	context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+		context->PSSetShader(m_implicitPS.Get(), nullptr, 0);
+		context->PSSetConstantBuffers(0, 1, m_timeBuffer.GetAddressOf());
+		context->PSSetConstantBuffers(1, 1, m_controlBuffer.GetAddressOf());
 
-	context->PSSetShader(m_implicitPS.Get(), nullptr, 0);
-	context->PSSetConstantBuffers(0, 1, m_timeBuffer.GetAddressOf());
-	context->PSSetConstantBuffers(1, 1, m_controlBuffer.GetAddressOf());
+		context->DSSetShader(NULL, nullptr, 0);
+		context->HSSetShader(NULL, nullptr, 0);
+		context->GSSetShader(NULL, nullptr, 0);
 
-	context->DSSetShader(NULL, nullptr, 0);
-	context->HSSetShader(NULL, nullptr, 0);
-	context->GSSetShader(NULL, nullptr, 0);
+		context->DrawIndexed(m_implicitIndexCount, 0, 0);
 
-	context->DrawIndexed(m_implicitIndexCount, 0, 0);
+	}
 }
 
 void Sample3DSceneRenderer::CreateDeviceDependentResources()
@@ -254,6 +266,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	// PS
 	auto loadPSTask = DX::ReadDataAsync(L"SamplePixelShader.cso");
 	auto loadPSTask2 = DX::ReadDataAsync(L"ImplicitPixelShader.cso");
+	auto loadPSTask3 = DX::ReadDataAsync(L"SnakePS.cso");
 
 	// HS & DS
 	auto loadHSTask = DX::ReadDataAsync(L"HullShader.cso");
@@ -396,6 +409,18 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				fileData.size(),
 				nullptr,
 				&m_implicitPS
+			)
+		);
+	});
+
+	auto createPSTask3 = loadPSTask3.then([this](const std::vector<byte>& fileData)
+	{
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreatePixelShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_snakePS
 			)
 		);
 	});
@@ -676,11 +701,12 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	{
 		static const VertexPosition snakePoints[] =
 		{
-			XMFLOAT3(0.0f, 0.4f, 0.0f),
-			XMFLOAT3(0.0f, 0.3f, 0.0f),
+			XMFLOAT3(0.0f, 0.2f, -0.8f),
+			XMFLOAT3(0.0f, 0.2f, -0.6f),
+			XMFLOAT3(0.0f, 0.2f, -0.4f),
+			XMFLOAT3(0.0f, 0.2f, -0.2f),
 			XMFLOAT3(0.0f, 0.2f, 0.0f),
-			XMFLOAT3(0.0f, 0.1f, 0.0f),
-			XMFLOAT3(0.0f, 0.0f, 0.0f)
+			XMFLOAT3(0.0f, 0.2f, 0.2f),
 		};
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
@@ -697,7 +723,11 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		);
 		static const unsigned short snakePointIndices[] =
 		{
-			0, 1, 2, 3, 4
+			0, 1,
+			1, 2,
+			2, 3,
+			3, 4,
+			4, 5
 		};
 
 		m_snakeIndexCount = ARRAYSIZE(snakePointIndices);
@@ -858,11 +888,17 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	// Rasterizer States
 	CD3D11_RASTERIZER_DESC m_wireframeRasterDesc = CD3D11_RASTERIZER_DESC(D3D11_DEFAULT);
 	m_wireframeRasterDesc.FillMode = D3D11_FILL_WIREFRAME;
+	m_wireframeRasterDesc.CullMode = D3D11_CULL_NONE;
 	m_deviceResources->GetD3DDevice()->CreateRasterizerState(&m_wireframeRasterDesc, m_wireframeRasterState.GetAddressOf());
 
 	CD3D11_RASTERIZER_DESC m_filledRasterDesc = CD3D11_RASTERIZER_DESC(D3D11_DEFAULT);
 	m_filledRasterDesc.FillMode = D3D11_FILL_SOLID;
 	m_deviceResources->GetD3DDevice()->CreateRasterizerState(&m_filledRasterDesc, m_filledRasterState.GetAddressOf());
+
+	CD3D11_RASTERIZER_DESC m_filledNoCullRasterStateDesc = CD3D11_RASTERIZER_DESC(D3D11_DEFAULT);
+	m_filledNoCullRasterStateDesc.FillMode = D3D11_FILL_SOLID;
+	m_filledNoCullRasterStateDesc.CullMode = D3D11_CULL_NONE;
+	m_deviceResources->GetD3DDevice()->CreateRasterizerState(&m_filledNoCullRasterStateDesc, m_filledNoCullRasterState.GetAddressOf());
 
 	// Constant Buffers
 	CD3D11_BUFFER_DESC constantBufferDesc(sizeof(ModelViewProjectionConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
@@ -892,23 +928,14 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		)
 	);
 
-	//CD3D11_BUFFER_DESC controlBufferDesc(sizeof(ControlBuffer), D3D11_BIND_CONSTANT_BUFFER);
-	//DX::ThrowIfFailed(
-	//	m_deviceResources->GetD3DDevice()->CreateBuffer(
-	//		&controlBufferDesc,
-	//		nullptr,
-	//		m_controlBuffer.GetAddressOf()
-	//	)
-	//);
-
-	//CD3D11_BUFFER_DESC controlBufferDesc(sizeof(ControlBuffer), D3D11_BIND_CONSTANT_BUFFER);
-	//DX::ThrowIfFailed(
-	//	m_deviceResources->GetD3DDevice()->CreateBuffer(
-	//		&controlBufferDesc,
-	//		nullptr,
-	//		&m_controlBuffer
-	//	)
-	//);
+	CD3D11_BUFFER_DESC controlBufferDesc(sizeof(ControlBuffer), D3D11_BIND_CONSTANT_BUFFER);
+	DX::ThrowIfFailed(
+		m_deviceResources->GetD3DDevice()->CreateBuffer(
+			&controlBufferDesc,
+			nullptr,
+			m_controlBuffer.GetAddressOf()
+		)
+	);
 
 	// Sampler
 	D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC(D3D11_DEFAULT);

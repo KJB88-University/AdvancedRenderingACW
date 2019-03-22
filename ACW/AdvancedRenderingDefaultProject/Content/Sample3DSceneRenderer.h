@@ -50,6 +50,7 @@ namespace AdvancedRenderingDefaultProject
 
 		// Snake Polyline
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_snakeVS;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> m_snakePS;
 		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_snakeGS;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_snakeTexture; // TODO
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_snakePointsLayout;
@@ -79,14 +80,17 @@ namespace AdvancedRenderingDefaultProject
 		// Rasterizer States
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_wireframeRasterState;
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_filledRasterState;
+		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_filledNoCullRasterState;
 
 		// Samplers
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> m_sampler;
 
 		// Control vars
+		bool m_isImplicit = false;
 		float m_isRepeating = 0;
 		float m_isDeforming = 0;
 		float m_isFractal = 0;
+		float m_isShiny = 0;
 
 		// Variables used with the rendering loop.
 		bool	m_loadingComplete;
