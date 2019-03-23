@@ -180,11 +180,12 @@ void Sample3DSceneRenderer::Render()
 		context->IASetIndexBuffer(m_snakeIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
 		context->IASetInputLayout(m_snakePointsLayout.Get());
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		context->RSSetState(m_wireframeRasterState.Get());
+		context->RSSetState(m_filledNoCullRasterState.Get());
 
 		// vs
 		context->VSSetShader(m_snakeVS.Get(), nullptr, 0);
-		context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+		context->VSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
+		context->VSSetConstantBuffers(1, 1, m_timeBuffer.GetAddressOf());
 
 		// hs ds clear
 		context->HSSetShader(NULL, nullptr, 0);
@@ -228,6 +229,7 @@ void Sample3DSceneRenderer::Render()
 		context->DrawIndexed(m_grassIndexCount, 0, 0);
 #pragma endregion
 	}
+	// IMPLICIT
 	else
 	{
 		// PS IMPLICITS
@@ -707,6 +709,8 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 			XMFLOAT3(0.0f, 0.2f, -0.2f),
 			XMFLOAT3(0.0f, 0.2f, 0.0f),
 			XMFLOAT3(0.0f, 0.2f, 0.2f),
+			XMFLOAT3(0.0f, 0.2f, 0.4f),
+			XMFLOAT3(0.0f, 0.2f, 0.6f)
 		};
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
@@ -727,7 +731,9 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 			1, 2,
 			2, 3,
 			3, 4,
-			4, 5
+			4, 5,
+			5, 6,
+			6, 7
 		};
 
 		m_snakeIndexCount = ARRAYSIZE(snakePointIndices);
@@ -893,12 +899,13 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 	CD3D11_RASTERIZER_DESC m_filledRasterDesc = CD3D11_RASTERIZER_DESC(D3D11_DEFAULT);
 	m_filledRasterDesc.FillMode = D3D11_FILL_SOLID;
+	m_filledRasterDesc.CullMode = D3D11_CULL_BACK;
 	m_deviceResources->GetD3DDevice()->CreateRasterizerState(&m_filledRasterDesc, m_filledRasterState.GetAddressOf());
 
-	CD3D11_RASTERIZER_DESC m_filledNoCullRasterStateDesc = CD3D11_RASTERIZER_DESC(D3D11_DEFAULT);
-	m_filledNoCullRasterStateDesc.FillMode = D3D11_FILL_SOLID;
-	m_filledNoCullRasterStateDesc.CullMode = D3D11_CULL_NONE;
-	m_deviceResources->GetD3DDevice()->CreateRasterizerState(&m_filledNoCullRasterStateDesc, m_filledNoCullRasterState.GetAddressOf());
+	CD3D11_RASTERIZER_DESC m_filledNoCullRasterDesc = CD3D11_RASTERIZER_DESC(D3D11_DEFAULT);
+	m_filledNoCullRasterDesc.FillMode = D3D11_FILL_SOLID;
+	m_filledNoCullRasterDesc.CullMode = D3D11_CULL_NONE;
+	m_deviceResources->GetD3DDevice()->CreateRasterizerState(&m_filledNoCullRasterDesc, m_filledNoCullRasterState.GetAddressOf());
 
 	// Constant Buffers
 	CD3D11_BUFFER_DESC constantBufferDesc(sizeof(ModelViewProjectionConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);

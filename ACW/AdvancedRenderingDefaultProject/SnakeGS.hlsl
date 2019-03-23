@@ -30,30 +30,51 @@ void GS_main(line GeometryShaderInput input[2], inout TriangleStream<PixelShader
 
 		for (int i = 0; i < 11; i++)
 		{
-			float angle = 3.14f * 2.0f / 10.0f * i;
+			float angle = 3.14f * 2.0f / 5.0f * i;
 			float4 offset;
+
+			// TAIL
+			// Taper
 			if (input[0].pos.z < -0.7f)
 			{
-				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.015;
+				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.001f;
 			}
+			// Fatten Head
+			else if (input[0].pos.z >= 0.4f)
+			{
+				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.075f;
+			}
+			// Normal
 			else
 			{
 				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.05f;
 			}
+			
 			output.pos = input[0].pos + offset;
 
 			output.pos = mul(output.pos, model);
 			output.pos = mul(output.pos, view);
 			output.pos = mul(output.pos, projection);
+
+			output.pos.x += sin(output.pos.x * deltaTime) * 0.15f;
+
 			OutputStream.Append(output);
 
-			if (input[1].pos.z > 0.1f)
+			// HEAD
+			// Taper
+			if (input[1].pos.z > 0.5f)
 			{
-				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.05f;
+				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.001f;
 			}
+			// Fatten Head
+			//else if (input[1].pos.z >= 0.0f)
+			//{
+			//	offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.075f;
+			//}
+			// Normal
 			else
 			{
-				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.025f;
+				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.05f;
 			}
 
 			output.pos = input[1].pos + offset;
@@ -61,6 +82,8 @@ void GS_main(line GeometryShaderInput input[2], inout TriangleStream<PixelShader
 			output.pos = mul(output.pos, model);
 			output.pos = mul(output.pos, view);
 			output.pos = mul(output.pos, projection);
+
+			output.pos.x += sin(output.pos.x * deltaTime) * 0.15f;
 
 			OutputStream.Append(output);
 		}
