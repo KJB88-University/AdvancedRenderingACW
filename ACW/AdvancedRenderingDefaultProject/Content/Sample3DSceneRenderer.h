@@ -37,6 +37,10 @@ namespace AdvancedRenderingDefaultProject
 		Microsoft::WRL::ComPtr<ID3D11PixelShader>	m_pixelShader;
 		Microsoft::WRL::ComPtr<ID3D11HullShader> m_hullShader;
 		Microsoft::WRL::ComPtr<ID3D11DomainShader> m_domainShader;
+
+		// http://spiralgraphics.biz/packs/terrain_civilization/index.htm?14
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_displacementMap;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_normalMap;
 		uint32	m_indexCount;
 
 		// Particle Grass
@@ -46,16 +50,19 @@ namespace AdvancedRenderingDefaultProject
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_grassPointsLayout;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_grassBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_grassIndexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> m_grassPS;
 		uint32 m_grassIndexCount;
 
 		// Snake Polyline
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_snakeVS;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> m_snakePS;
 		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_snakeGS;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_snakeTexture; // TODO
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_snakePointsLayout;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_snakeBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_snakeIndexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_snakeBuffer2;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_snakeIndexBuffer2;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_snakeTex;
 		uint32 m_snakeIndexCount;
 
 		// Implicit Objects
@@ -65,6 +72,20 @@ namespace AdvancedRenderingDefaultProject
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_implicitBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_implicitIndexBuffer;
 		uint32 m_implicitIndexCount;
+
+		// Parametric Torus Object
+		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_parametricIL;
+		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_parametricVS;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> m_parametricPS;
+		Microsoft::WRL::ComPtr<ID3D11HullShader> m_parametricHS;
+		Microsoft::WRL::ComPtr<ID3D11DomainShader> m_parametricDS;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_parametricBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_parametricIndexBuffer;
+		uint32 m_parametricIndexCount;
+
+		// Parametric Sphere Object
+		Microsoft::WRL::ComPtr<ID3D11HullShader> m_parametricSphereHS;
+		Microsoft::WRL::ComPtr<ID3D11DomainShader> m_parametricSphereDS;
 
 		// Constant Buffers
 		ModelViewProjectionConstantBuffer	m_constantBufferData;
@@ -82,8 +103,15 @@ namespace AdvancedRenderingDefaultProject
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_filledRasterState;
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_filledNoCullRasterState;
 
+		// Depth Stencil State
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_noDepthStencil;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencil;
+
 		// Samplers
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> m_sampler;
+
+		// Blend State
+		Microsoft::WRL::ComPtr<ID3D11BlendState> m_blend;
 
 		// Control vars
 		bool m_isImplicit = false;

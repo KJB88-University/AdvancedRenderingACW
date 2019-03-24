@@ -1,10 +1,5 @@
-//static float3 QuadPos[4] =
-//{
-//	float3(-1, 1, 0),
-//	float3(-1, -1, 0),
-//	float3(1, 1, 0),
-//	float3(1, -1, 0)
-//};
+Texture2D dispMap : register (t0);
+SamplerState Sampler;
 
 // Floor Quad
 static float3 QuadPos[4] =
@@ -40,16 +35,22 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
 	matrix projection;
 };
 
+cbuffer TimeBuffer : register (b1)
+{
+	float deltaTime;
+	float3 padding;
+}
+
 [domain("quad")]
 VS_OUTPUT DS_QuadTess(HS_Quad_Tess_Param input, float2 uv : SV_DomainLocation)
 {
 	VS_OUTPUT output;
-	
-	float3 vPos1 = (1.0f - uv.y) * QuadPos[0].xyz + uv.y * QuadPos[1].xyz;
-	float3 vPos2 = (1.0f - uv.y) * QuadPos[2].xyz + uv.y * QuadPos[3].xyz;
+
+	float3 vPos1 = (1.0f - uv.y) * QuadPos[0] + uv.y * QuadPos[1].xyz;
+	float3 vPos2 = (1.0f - uv.y) * QuadPos[2] + uv.y * QuadPos[3].xyz;
 	float3 uvPos = (1.0f - uv.x) * vPos1 + uv.x * vPos2;
 
-	output.pos = float4(0.6 * uvPos, 1);
+	output.pos = float4(uvPos.x, uvPos.y, uvPos.z, 1);
 
 	output.pos = mul(output.pos, model);
 	output.pos = mul(output.pos, view);

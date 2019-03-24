@@ -1,6 +1,3 @@
-Texture2D grassTex : register (t0);
-SamplerState Sampler;
-
 // A constant buffer that stores the three basic column-major matrices for composing geometry.
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
 {
@@ -23,7 +20,6 @@ struct GeometryShaderInput
 struct PixelShaderInput
 {
 	float4 pos : SV_POSITION;
-	float3 color : COLOR0;
 	float2 uv : TEXCOORD0;
 };
 
@@ -45,26 +41,16 @@ void GS_main(point GeometryShaderInput input[1], inout TriangleStream<PixelShade
 	float3(1, 1, 0)
 	};
 
-	//static const float3 g_positions[3] =
-	//{
-	//	float3(0, 2, 0),
-	//	float3(0.5, -0.5, 0),
-	//	float3(-0.5, -0.5, 0)
-	//};
-
 	// Tri1
-	float size = 0.02f;
+	float size = 0.05f;
 	float windSpeed = 1.0f;
 	float waveAmplitude = 0.1f;
 	float dampening = 0.25f;
-
-	float4 texColor = grassTex.SampleLevel(Sampler, 0.0f, 0.0f);
-
 	// V1
 	output.pos = vPos + float4(size * g_positions[0], 0.0f);
 	output.pos = mul(output.pos, projection);
 
-	output.color = texColor;
+	output.uv = float2(0.0f, 1.0f);
 
 	OutputStream.Append(output);
 
@@ -74,10 +60,9 @@ void GS_main(point GeometryShaderInput input[1], inout TriangleStream<PixelShade
 	// Apply animation
 	output.pos.z += sin(windSpeed * deltaTime)  * waveAmplitude * dampening;
 	output.pos.x += cos(windSpeed * deltaTime) * waveAmplitude * dampening;
-
 	output.pos = mul(output.pos, projection);
 
-	output.color = texColor;
+	output.uv = float2(0.0f,0.0f);
 
 	OutputStream.Append(output);
 
@@ -85,8 +70,7 @@ void GS_main(point GeometryShaderInput input[1], inout TriangleStream<PixelShade
 	output.pos = vPos + float4(size * g_positions[2], 0.0f);
 	output.pos = mul(output.pos, projection);
 
-	//output.color = input[0].color;
-	output.color = texColor;
+	output.uv = float2(1.0f, 1.0f);
 
 	OutputStream.Append(output);
 
@@ -96,10 +80,9 @@ void GS_main(point GeometryShaderInput input[1], inout TriangleStream<PixelShade
 	// Apply animation
 	output.pos.z += sin(windSpeed * deltaTime)  * waveAmplitude * dampening;
 	output.pos.x += cos(windSpeed * deltaTime) * waveAmplitude * dampening;
-
 	output.pos = mul(output.pos, projection);
 
-	output.color = texColor;
+	output.uv = float2(1.0f, 0.0f);
 
 	OutputStream.Append(output);
 }

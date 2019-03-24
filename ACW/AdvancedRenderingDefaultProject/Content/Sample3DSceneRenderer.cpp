@@ -2,6 +2,7 @@
 #include "Sample3DSceneRenderer.h"
 #include "..\Common\DDSTextureLoader.h"
 #include "..\Common\DirectXHelper.h"
+#include <random>
 
 using namespace AdvancedRenderingDefaultProject;
 
@@ -150,8 +151,9 @@ void Sample3DSceneRenderer::Render()
 		offset = 0;
 
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		context->RSSetState(m_wireframeRasterState.Get());
-
+		context->RSSetState(m_filledRasterState.Get());
+		context->OMSetDepthStencilState(m_noDepthStencil.Get(), 0);
+		context->OMSetBlendState(m_blend.Get(), 0, 0xffffffff);
 		// FLOOR QUAD
 #pragma region FLOOR
 		context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
@@ -161,17 +163,20 @@ void Sample3DSceneRenderer::Render()
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 		context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
 		context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
-		context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+		context->VSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
 
-		context->DSSetShader(m_domainShader.Get(), nullptr, 0);
-		context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 		context->HSSetShader(m_hullShader.Get(), nullptr, 0);
+		context->DSSetShader(m_domainShader.Get(), nullptr, 0);
+		context->DSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
+		context->DSSetConstantBuffers(1, 1, m_timeBuffer.GetAddressOf());
+		context->DSSetSamplers(0, 1, m_sampler.GetAddressOf());
+		context->DSSetShaderResources(0, 1, m_displacementMap.GetAddressOf());
 
 		context->GSSetShader(NULL, nullptr, 0);
 		context->DrawIndexed(m_indexCount, 0, 0);
 #pragma endregion
 
-		// SNAKE POLYLINE
+	// SNAKE POLYLINE
 #pragma region SNAKE
 	// ia
 		stride = sizeof(VertexPosition);
@@ -180,6 +185,7 @@ void Sample3DSceneRenderer::Render()
 		context->IASetIndexBuffer(m_snakeIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
 		context->IASetInputLayout(m_snakePointsLayout.Get());
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//context->RSSetState(m_filledNoCullRasterState.Get());
 		context->RSSetState(m_filledNoCullRasterState.Get());
 
 		// vs
@@ -199,10 +205,15 @@ void Sample3DSceneRenderer::Render()
 		// ps
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 		context->PSSetShader(m_snakePS.Get(), nullptr, 0);
+		context->PSSetShaderResources(0, 1, m_snakeTex.GetAddressOf());
+		context->DrawIndexed(m_snakeIndexCount, 0, 0);
+
+		context->IASetVertexBuffers(0, 1, m_snakeBuffer2.GetAddressOf(), &stride, &offset);
+		context->IASetIndexBuffer(m_snakeIndexBuffer2.Get(), DXGI_FORMAT_R16_UINT, .0);
 		context->DrawIndexed(m_snakeIndexCount, 0, 0);
 #pragma endregion
 
-		// PARTICLES
+//		// PARTICLES
 #pragma region PARTICLES
 		stride = sizeof(VertexPosition);
 		offset = 0;
@@ -221,13 +232,49 @@ void Sample3DSceneRenderer::Render()
 		context->GSSetShader(m_grassGS.Get(), nullptr, 0);
 		context->GSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
 		context->GSSetConstantBuffers(1, 1, m_timeBuffer.GetAddressOf());
-		context->GSSetShaderResources(0, 1, m_grassTexture.GetAddressOf());
 		context->GSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-		context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+		context->PSSetShader(m_grassPS.Get(), nullptr, 0);
+		context->PSSetShaderResources(0, 1, m_grassTexture.GetAddressOf());
 		context->DrawIndexed(m_grassIndexCount, 0, 0);
+		//context->OMSetBlendState(NULL, 0, 0);
 #pragma endregion
+
+//		// PARAMETRIC TORUS
+		context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+		context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
+		context->IASetInputLayout(m_parametricIL.Get());
+		context->RSSetState(m_wireframeRasterState.Get());
+
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+		context->VSSetShader(m_parametricVS.Get(), nullptr, 0);
+		context->PSSetShader(m_parametricPS.Get(), nullptr, 0);
+
+		context->HSSetShader(m_parametricHS.Get(), nullptr, 0);
+		context->DSSetShader(m_parametricDS.Get(), nullptr, 0);
+		context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+
+		context->GSSetShader(NULL, nullptr, 0);
+		context->DrawIndexed(m_indexCount, 0, 0);
+
+		// PARAMETRIC SPHERE
+		context->RSSetState(m_wireframeRasterState.Get());
+		context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+		context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
+		context->IASetInputLayout(m_parametricIL.Get());
+		context->RSSetState(m_wireframeRasterState.Get());
+
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+		context->VSSetShader(m_parametricVS.Get(), nullptr, 0);
+		context->PSSetShader(m_parametricPS.Get(), nullptr, 0);
+
+		context->HSSetShader(m_parametricSphereHS.Get(), nullptr, 0);
+		context->DSSetShader(m_parametricSphereDS.Get(), nullptr, 0);
+		context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+
+		context->GSSetShader(NULL, nullptr, 0);
+		context->DrawIndexed(m_indexCount, 0, 0);
 	}
 	// IMPLICIT
 	else
@@ -264,15 +311,22 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	auto loadVSTask2 = DX::ReadDataAsync(L"GrassVS.cso");
 	auto loadVSTask3 = DX::ReadDataAsync(L"SnakeVS.cso");
 	auto loadVSTask4 = DX::ReadDataAsync(L"ImplicitVS.cso");
+	auto loadVSTask5 = DX::ReadDataAsync(L"ParametricVS.cso");
 
 	// PS
 	auto loadPSTask = DX::ReadDataAsync(L"SamplePixelShader.cso");
 	auto loadPSTask2 = DX::ReadDataAsync(L"ImplicitPixelShader.cso");
 	auto loadPSTask3 = DX::ReadDataAsync(L"SnakePS.cso");
+	auto loadPSTask4 = DX::ReadDataAsync(L"ParametricPS.cso");
+	auto loadPSTask5 = DX::ReadDataAsync(L"GrassPS.cso");
 
 	// HS & DS
 	auto loadHSTask = DX::ReadDataAsync(L"HullShader.cso");
 	auto loadDSTask = DX::ReadDataAsync(L"DomainShader.cso");
+	auto loadHSTask2 = DX::ReadDataAsync(L"ParametricHS.cso");
+	auto loadDSTask2 = DX::ReadDataAsync(L"ParametricDS.cso");
+	auto loadHSTask3 = DX::ReadDataAsync(L"ParametricSphereHS.cso");
+	auto loadDSTask3 = DX::ReadDataAsync(L"ParametricSphereDS.cso");
 
 	// GS
 	auto loadGSParticleTask = DX::ReadDataAsync(L"GrassParticleGS.cso");
@@ -390,6 +444,35 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		);
 	});
 
+	// Parametric Shapes Vertex Shader
+	auto createVStask5 = loadVSTask5.then([this](const std::vector<byte>&fileData)
+	{
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateVertexShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_parametricVS
+			)
+		);
+
+		static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateInputLayout(
+				vertexDesc,
+				ARRAYSIZE(vertexDesc),
+				&fileData[0],
+				fileData.size(),
+				&m_parametricIL
+			)
+		);
+	});
+
 	// Basic Pixel Shader
 	auto createPSTask = loadPSTask.then([this](const std::vector<byte>& fileData) {
 		DX::ThrowIfFailed(
@@ -415,6 +498,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		);
 	});
 
+	// Snake
 	auto createPSTask3 = loadPSTask3.then([this](const std::vector<byte>& fileData)
 	{
 		DX::ThrowIfFailed(
@@ -423,6 +507,32 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				fileData.size(),
 				nullptr,
 				&m_snakePS
+			)
+		);
+	});
+
+	// Parametric Shapes Pixel Shader
+	auto createPStask4 = loadPSTask4.then([this](const std::vector<byte>&fileData)
+	{
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreatePixelShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_parametricPS
+			)
+		);
+	});
+
+	// Grass PS
+	auto createPSTask5 = loadPSTask5.then([this](std::vector<byte>& fileData)
+	{
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreatePixelShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_grassPS
 			)
 		);
 	});
@@ -440,6 +550,32 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		);
 	});
 
+	// Parametric Shapes Hull Shader
+	auto createHSTask2 = loadHSTask2.then([this](const std::vector<byte>&fileData)
+	{
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateHullShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_parametricHS
+			)
+		);
+	});
+
+	// Parametric Sphere HS
+	auto createHSTask3 = loadHSTask3.then([this](std::vector<byte>& fileData)
+	{
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateHullShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_parametricSphereHS
+			)
+		);
+	});
+
 	// Floor Quad Domain Shader
 	auto createDSTask = loadDSTask.then([this](const std::vector<byte>& fileData)
 	{
@@ -449,6 +585,32 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				fileData.size(),
 				nullptr,
 				&m_domainShader
+			)
+		);
+	});
+
+	// Parametric Shapes Domain Shader
+	auto createDSTask2 = loadDSTask2.then([this](const std::vector<byte>&fileData)
+	{
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateDomainShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_parametricDS
+			)
+		);
+	});
+
+	// Parametric Sphere Domain Shader
+	auto createDSTask3 = loadDSTask3.then([this](const std::vector<byte>&fileData)
+	{
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateDomainShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_parametricSphereDS
 			)
 		);
 	});
@@ -466,7 +628,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		);
 
 		// Grass Blade Texture
-		HRESULT result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"grassBlade.dds", nullptr, &m_grassTexture);
+		HRESULT result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"grass1.dds", nullptr, &m_grassTexture);
 	});
 
 	// Snake Geometry Shader
@@ -481,181 +643,37 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 			)
 		);
 		// Snake Texture
-		//HRESULT result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"grassBlade.dds", nullptr, &m_grassTexture);
+		HRESULT result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"snaketex2.dds", nullptr, &m_snakeTex);
 	});
 
 	// Grass Plane Points
 	auto createGrassPlaneTask = (createPSTask && createVSTask && createHSTask && createDSTask && createGSParticleTask && createVSTask2 && createVSTask3 && createSnakeGSTask).then([this]()
 	{
-		const float minX = -0.5f;
-		const float maxX = 0.5f;
+		//const float minX = -0.5f;
+		//const float maxX = 0.5f;
 		const float staticY = 0.02f;
-		const float minZ = -0.5f;
-		const float maxZ = 0.5f;
+		//const float minZ = -0.5f;
+		//const float maxZ = 0.5f;
 
-		static const VertexPosition grassPoints[] =
+		static VertexPosition grassPointsRandom[1000];
+		static unsigned int grassPointIndices[1000];
+
+		std::random_device random;
+		std::mt19937 mt(random());
+		std::uniform_real_distribution<float> distrib(-0.95f, 0.95f);
+		for (int i = 0; i < 200; i++)
 		{
-			// First Row
-			XMFLOAT3(minX, staticY, minZ), // Back Left
-			XMFLOAT3(-0.4f, staticY, minZ),
-			XMFLOAT3(-0.3f, staticY, minZ),
-			XMFLOAT3(-0.3f, staticY, minZ),
-			XMFLOAT3(-0.2f, staticY, minZ),
-			XMFLOAT3(-0.1f, staticY, minZ),
-			XMFLOAT3(0.0f, staticY, minZ),
-			XMFLOAT3(0.1f, staticY, minZ),
-			XMFLOAT3(0.2f, staticY, minZ),
-			XMFLOAT3(0.3f, staticY, minZ),
-			XMFLOAT3(0.4f, staticY, minZ),
-			XMFLOAT3(maxX, staticY, minZ), 	// Back Right
+			grassPointsRandom[i] = 
+				VertexPosition{ XMFLOAT3(distrib(mt), staticY, distrib(mt)) };
 
-			// Second Row
-			XMFLOAT3(minX, staticY, -0.4f),
-			XMFLOAT3(-0.4f, staticY, -0.4f),
-			XMFLOAT3(-0.3f, staticY, -0.4f),
-			XMFLOAT3(-0.3f, staticY, -0.4f),
-			XMFLOAT3(-0.2f, staticY, -0.4f),
-			XMFLOAT3(-0.1f, staticY, -0.4f),
-			XMFLOAT3(0.0f, staticY, -0.4f),
-			XMFLOAT3(0.1f, staticY, -0.4f),
-			XMFLOAT3(0.2f, staticY, -0.4f),
-			XMFLOAT3(0.3f, staticY, -0.4f),
-			XMFLOAT3(0.4f, staticY, -0.4f),
-			XMFLOAT3(maxX, staticY, -0.4f),
-
-			// Third Row
-			XMFLOAT3(minX, staticY, -0.3f),
-			XMFLOAT3(-0.4f, staticY, -0.3f),
-			XMFLOAT3(-0.3f, staticY, -0.3f),
-			XMFLOAT3(-0.3f, staticY, -0.3f),
-			XMFLOAT3(-0.2f, staticY, -0.3f),
-			XMFLOAT3(-0.1f, staticY, -0.3f),
-			XMFLOAT3(0.0f, staticY, -0.3f),
-			XMFLOAT3(0.1f, staticY, -0.3f),
-			XMFLOAT3(0.2f, staticY, -0.3f),
-			XMFLOAT3(0.3f, staticY, -0.3f),
-			XMFLOAT3(0.4f, staticY, -0.3f),
-			XMFLOAT3(maxX, staticY, -0.3f),
-
-			// Fourth Row
-			XMFLOAT3(minX, staticY, -0.2f),
-			XMFLOAT3(-0.4f, staticY, -0.2f),
-			XMFLOAT3(-0.3f, staticY, -0.2f),
-			XMFLOAT3(-0.3f, staticY, -0.2f),
-			XMFLOAT3(-0.2f, staticY, -0.2f),
-			XMFLOAT3(-0.1f, staticY, -0.2f),
-			XMFLOAT3(0.0f, staticY, -0.2f),
-			XMFLOAT3(0.1f, staticY, -0.2f),
-			XMFLOAT3(0.2f, staticY, -0.2f),
-			XMFLOAT3(0.3f, staticY, -0.2f),
-			XMFLOAT3(0.4f, staticY, -0.2f),
-			XMFLOAT3(maxX, staticY, -0.2f),
-
-			// Fifth Row
-			XMFLOAT3(minX, staticY, -0.1f),
-			XMFLOAT3(-0.4f, staticY, -0.1f),
-			XMFLOAT3(-0.3f, staticY, -0.1f),
-			XMFLOAT3(-0.3f, staticY, -0.1f),
-			XMFLOAT3(-0.2f, staticY, -0.1f),
-			XMFLOAT3(-0.1f, staticY, -0.1f),
-			XMFLOAT3(0.0f, staticY, -0.1f),
-			XMFLOAT3(0.1f, staticY, -0.1f),
-			XMFLOAT3(0.2f, staticY, -0.1f),
-			XMFLOAT3(0.3f, staticY, -0.1f),
-			XMFLOAT3(0.4f, staticY, -0.1f),
-			XMFLOAT3(maxX, staticY, -0.1f),
-
-			// Sixth Row
-			XMFLOAT3(minX, staticY, 0.0f),
-			XMFLOAT3(-0.4f, staticY, 0.0f),
-			XMFLOAT3(-0.3f, staticY, 0.0f),
-			XMFLOAT3(-0.3f, staticY, 0.0f),
-			XMFLOAT3(-0.2f, staticY, 0.0f),
-			XMFLOAT3(-0.1f, staticY, 0.0f),
-			XMFLOAT3(0.0f, staticY, 0.0f),
-			XMFLOAT3(0.1f, staticY, 0.0f),
-			XMFLOAT3(0.2f, staticY, 0.0f),
-			XMFLOAT3(0.3f, staticY, 0.0f),
-			XMFLOAT3(0.4f, staticY, 0.0f),
-			XMFLOAT3(maxX, staticY, 0.0f),
-
-			// Seventh Row
-			XMFLOAT3(minX, staticY, 0.1f),
-			XMFLOAT3(-0.4f, staticY, 0.1f),
-			XMFLOAT3(-0.3f, staticY, 0.1f),
-			XMFLOAT3(-0.3f, staticY, 0.1f),
-			XMFLOAT3(-0.2f, staticY, 0.1f),
-			XMFLOAT3(-0.1f, staticY, 0.1f),
-			XMFLOAT3(0.0f, staticY, 0.1f),
-			XMFLOAT3(0.1f, staticY, 0.1f),
-			XMFLOAT3(0.2f, staticY, 0.1f),
-			XMFLOAT3(0.3f, staticY, 0.1f),
-			XMFLOAT3(0.4f, staticY, 0.1f),
-			XMFLOAT3(maxX, staticY, 0.1f),
-
-			// Eighth Row
-			XMFLOAT3(minX, staticY, 0.2f),
-			XMFLOAT3(-0.4f, staticY, 0.2f),
-			XMFLOAT3(-0.3f, staticY, 0.2f),
-			XMFLOAT3(-0.3f, staticY, 0.2f),
-			XMFLOAT3(-0.2f, staticY, 0.2f),
-			XMFLOAT3(-0.1f, staticY, 0.2f),
-			XMFLOAT3(0.0f, staticY, 0.2f),
-			XMFLOAT3(0.1f, staticY, 0.2f),
-			XMFLOAT3(0.2f, staticY, 0.2f),
-			XMFLOAT3(0.3f, staticY, 0.2f),
-			XMFLOAT3(0.4f, staticY, 0.2f),
-			XMFLOAT3(maxX, staticY, 0.2f),
-
-			// Ninth Row
-			XMFLOAT3(minX, staticY, 0.3f),
-			XMFLOAT3(-0.4f, staticY, 0.3f),
-			XMFLOAT3(-0.3f, staticY, 0.3f),
-			XMFLOAT3(-0.3f, staticY, 0.3f),
-			XMFLOAT3(-0.2f, staticY, 0.3f),
-			XMFLOAT3(-0.1f, staticY, 0.3f),
-			XMFLOAT3(0.0f, staticY, 0.3f),
-			XMFLOAT3(0.1f, staticY, 0.3f),
-			XMFLOAT3(0.2f, staticY, 0.3f),
-			XMFLOAT3(0.3f, staticY, 0.3f),
-			XMFLOAT3(0.4f, staticY, 0.3f),
-			XMFLOAT3(maxX, staticY, 0.3f),
-
-			// Tenth Row
-			XMFLOAT3(minX, staticY, 0.4f),
-			XMFLOAT3(-0.4f, staticY, 0.4f),
-			XMFLOAT3(-0.3f, staticY, 0.4f),
-			XMFLOAT3(-0.3f, staticY, 0.4f),
-			XMFLOAT3(-0.2f, staticY, 0.4f),
-			XMFLOAT3(-0.1f, staticY, 0.4f),
-			XMFLOAT3(0.0f, staticY, 0.4f),
-			XMFLOAT3(0.1f, staticY, 0.4f),
-			XMFLOAT3(0.2f, staticY, 0.4f),
-			XMFLOAT3(0.3f, staticY, 0.4f),
-			XMFLOAT3(0.4f, staticY, 0.4f),
-			XMFLOAT3(maxX, staticY, 0.4f),
-
-			// Eleventh Row
-			XMFLOAT3(minX, staticY,  maxZ), // Front Left
-			XMFLOAT3(-0.4f, staticY, maxZ),
-			XMFLOAT3(-0.3f, staticY, maxZ),
-			XMFLOAT3(-0.3f, staticY, maxZ),
-			XMFLOAT3(-0.2f, staticY, maxZ),
-			XMFLOAT3(-0.1f, staticY, maxZ),
-			XMFLOAT3(0.0f, staticY, maxZ),
-			XMFLOAT3(0.1f, staticY, maxZ),
-			XMFLOAT3(0.2f, staticY, maxZ),
-			XMFLOAT3(0.3f, staticY, maxZ),
-			XMFLOAT3(0.4f, staticY, maxZ),
-			XMFLOAT3(maxX, staticY,  maxZ) // Front Right
-
-		};
+			grassPointIndices[i] = i;
+		}
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-		vertexBufferData.pSysMem = grassPoints;
+		vertexBufferData.pSysMem = grassPointsRandom;
 		vertexBufferData.SysMemPitch = 0;
 		vertexBufferData.SysMemSlicePitch = 0;
-		CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(grassPoints), D3D11_BIND_VERTEX_BUFFER);
+		CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(grassPointsRandom), D3D11_BIND_VERTEX_BUFFER);
 		DX::ThrowIfFailed(
 			m_deviceResources->GetD3DDevice()->CreateBuffer(
 				&vertexBufferDesc,
@@ -663,23 +681,6 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				m_grassBuffer.GetAddressOf()
 			)
 		);
-		static const unsigned short grassPointIndices[] =
-		{
-			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-			15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-			25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-			35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
-			45, 46, 47, 48, 49, 50, 51, 52, 53, 54,
-			55, 56, 57, 58, 59, 60, 61, 62, 63, 64,
-			65, 66, 67, 68, 69, 70, 71, 72, 73, 74,
-			75, 76, 77, 78, 79, 80, 81, 82, 83, 84,
-			85, 86, 87, 88, 89, 90, 91, 92, 93, 94,
-			95, 96, 97, 98, 99, 100, 101, 102, 103, 104,
-			105, 106, 107, 108, 109, 110, 111, 112, 113, 114,
-			115, 116, 117, 118, 119, 120, 121, 122, 123, 124,
-			125, 126, 127, 128, 129, 130, 131
-
-		};
 
 		m_grassIndexCount = ARRAYSIZE(grassPointIndices);
 
@@ -703,14 +704,14 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	{
 		static const VertexPosition snakePoints[] =
 		{
-			XMFLOAT3(0.0f, 0.2f, -0.8f),
-			XMFLOAT3(0.0f, 0.2f, -0.6f),
-			XMFLOAT3(0.0f, 0.2f, -0.4f),
-			XMFLOAT3(0.0f, 0.2f, -0.2f),
-			XMFLOAT3(0.0f, 0.2f, 0.0f),
-			XMFLOAT3(0.0f, 0.2f, 0.2f),
-			XMFLOAT3(0.0f, 0.2f, 0.4f),
-			XMFLOAT3(0.0f, 0.2f, 0.6f)
+			XMFLOAT3(-0.5f, 0.2f, -0.8f),
+			XMFLOAT3(-0.5f, 0.2f, -0.6f),
+			XMFLOAT3(-0.5f, 0.2f, -0.4f),
+			XMFLOAT3(-0.5f, 0.2f, -0.2f),
+			XMFLOAT3(-0.5f, 0.2f, 0.0f),
+			XMFLOAT3(-0.5f, 0.2f, 0.2f),
+			XMFLOAT3(-0.5f, 0.2f, 0.4f),
+			XMFLOAT3(-0.5f, 0.2f, 0.6f)
 		};
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
@@ -751,9 +752,61 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 			)
 		);
 	});
+	auto createSnakeTask2 = (createPSTask && createVSTask && createHSTask && createDSTask && createGSParticleTask && createVSTask2 && createVSTask3 && createSnakeGSTask).then([this]()
+	{
+		static const VertexPosition snakePoints[] =
+		{
+			XMFLOAT3(0.5f, 0.2f, -0.8f),
+			XMFLOAT3(0.5f, 0.2f, -0.6f),
+			XMFLOAT3(0.5f, 0.2f, -0.4f),
+			XMFLOAT3(0.5f, 0.2f, -0.2f),
+			XMFLOAT3(0.5f, 0.2f, 0.0f),
+			XMFLOAT3(0.5f, 0.2f, 0.2f),
+			XMFLOAT3(0.5f, 0.2f, 0.4f),
+			XMFLOAT3(0.5f, 0.2f, 0.6f)
+		};
 
+		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
+		vertexBufferData.pSysMem = snakePoints;
+		vertexBufferData.SysMemPitch = 0;
+		vertexBufferData.SysMemSlicePitch = 0;
+		CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(snakePoints), D3D11_BIND_VERTEX_BUFFER);
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateBuffer(
+				&vertexBufferDesc,
+				&vertexBufferData,
+				m_snakeBuffer2.GetAddressOf()
+			)
+		);
+		static const unsigned short snakePointIndices[] =
+		{
+			0, 1,
+			1, 2,
+			2, 3,
+			3, 4,
+			4, 5,
+			5, 6,
+			6, 7
+		};
+
+		m_snakeIndexCount = ARRAYSIZE(snakePointIndices);
+
+		D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+		indexBufferData.pSysMem = snakePointIndices;
+		indexBufferData.SysMemPitch = 0;
+		indexBufferData.SysMemSlicePitch = 0;
+		CD3D11_BUFFER_DESC indexBufferDesc(sizeof(snakePointIndices), D3D11_BIND_INDEX_BUFFER);
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateBuffer(
+				&indexBufferDesc,
+				&indexBufferData,
+				&m_snakeIndexBuffer2
+			)
+		);
+	});
+	
 	// Floor Quad Mesh
-	auto createCubeTask = (createPSTask && createVSTask && createHSTask && createDSTask && createGSParticleTask && createVSTask2 && createVSTask3 && createSnakeGSTask).then([this]() {
+	auto createCubeTask = (createPSTask && createVSTask && createHSTask && createDSTask && createGSParticleTask && createVSTask2 && createVSTask3 && createSnakeGSTask && createDSTask2 && createHSTask2 && createDSTask3 && createHSTask3).then([this]() {
 
 		// Load mesh vertices. Each vertex has a position and a color.
 		static const VertexPositionColor floorQuad[] =
@@ -821,6 +874,9 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				m_indexBuffer.GetAddressOf()
 			)
 		);
+
+		 HRESULT result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"rockyDisp.dds", nullptr, &m_displacementMap);
+		 result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"rockyNormal.dds", nullptr, &m_normalMap);
 	});
 
 	// Implicit Placeholder 'Mesh'
@@ -948,6 +1004,28 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC(D3D11_DEFAULT);
 	DX::ThrowIfFailed(
 		m_deviceResources->GetD3DDevice()->CreateSamplerState(&samplerDesc, m_sampler.GetAddressOf()));
+
+	// Depth Stencil State
+	CD3D11_DEPTH_STENCIL_DESC noDepthStencilDesc = CD3D11_DEPTH_STENCIL_DESC(D3D11_DEFAULT);
+	noDepthStencilDesc.DepthEnable = false;
+	DX::ThrowIfFailed(
+		m_deviceResources->GetD3DDevice()->CreateDepthStencilState(&noDepthStencilDesc, m_noDepthStencil.GetAddressOf()));
+
+	CD3D11_DEPTH_STENCIL_DESC depthStencilDesc = CD3D11_DEPTH_STENCIL_DESC(D3D11_DEFAULT);
+	depthStencilDesc.DepthEnable = true;
+	DX::ThrowIfFailed(
+		m_deviceResources->GetD3DDevice()->CreateDepthStencilState(&depthStencilDesc, m_noDepthStencil.GetAddressOf()));
+
+	CD3D11_BLEND_DESC blendDesc = CD3D11_BLEND_DESC(D3D11_DEFAULT);
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+	m_deviceResources->GetD3DDevice()->CreateBlendState(&blendDesc, m_blend.GetAddressOf());
 #pragma endregion
 
 	// Join block
@@ -995,7 +1073,6 @@ void Sample3DSceneRenderer::ReleaseDeviceDependentResources()
 	m_snakeBuffer.Reset();
 	m_snakeIndexBuffer.Reset();
 	m_snakePointsLayout.Reset();
-	m_snakeTexture.Reset();
 
 	// D3D Resources
 	m_deviceResources.reset();

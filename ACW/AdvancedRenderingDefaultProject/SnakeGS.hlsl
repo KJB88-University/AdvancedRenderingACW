@@ -28,6 +28,11 @@ void GS_main(line GeometryShaderInput input[2], inout TriangleStream<PixelShader
 {
 	PixelShaderInput output = (PixelShaderInput)0;
 
+	float amp = 0.1f;
+	float length = 5.5f;
+	float freq = 3.0f;
+
+	// Define additional vertices
 		for (int i = 0; i < 11; i++)
 		{
 			float angle = 3.14f * 2.0f / 5.0f * i;
@@ -51,12 +56,13 @@ void GS_main(line GeometryShaderInput input[2], inout TriangleStream<PixelShader
 			}
 			
 			output.pos = input[0].pos + offset;
+			output.uv = float2(fmod(output.pos.x, 1.0), fmod(output.pos.z, 1.0));
 
 			output.pos = mul(output.pos, model);
 			output.pos = mul(output.pos, view);
 			output.pos = mul(output.pos, projection);
 
-			output.pos.x += sin(output.pos.x * deltaTime) * 0.15f;
+			output.pos.x += sin((deltaTime * freq) + (output.pos.x * length)) * amp,
 
 			OutputStream.Append(output);
 
@@ -67,10 +73,10 @@ void GS_main(line GeometryShaderInput input[2], inout TriangleStream<PixelShader
 				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.001f;
 			}
 			// Fatten Head
-			//else if (input[1].pos.z >= 0.0f)
-			//{
-			//	offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.075f;
-			//}
+			else if (input[1].pos.z >= 0.4f)
+			{
+				offset = float4(cos(angle), -sin(angle), 0.0f, 0.0f) * 0.075f;
+			}
 			// Normal
 			else
 			{
@@ -78,77 +84,14 @@ void GS_main(line GeometryShaderInput input[2], inout TriangleStream<PixelShader
 			}
 
 			output.pos = input[1].pos + offset;
+			output.uv = float2(fmod(output.pos.x, 1.0), fmod(output.pos.z, 1.0));
 
 			output.pos = mul(output.pos, model);
 			output.pos = mul(output.pos, view);
 			output.pos = mul(output.pos, projection);
 
-			output.pos.x += sin(output.pos.x * deltaTime) * 0.15f;
+			output.pos.x += sin((deltaTime * freq) + (output.pos.x * length)) * amp;
 
 			OutputStream.Append(output);
 		}
 }
-
-
-
-//
-//	//output.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
-//
-//	//OutputStream.Append(output);
-//	//float4 vPos1 = input[0].pos;
-//	//float4 vPos2 = input[1].pos;
-//	//vPos1 = mul(vPos1, model);
-//	//vPos1 = mul(vPos1, view);
-//	//vPos2 = mul(vPos2, model);
-//	//vPos2 = mul(vPos2, view);
-//
-//
-//
-//	//for (int i = 0; i < 100; i++)
-//	//{
-//	//	float angle = 2.0f * PI / 100.0f * i;
-//
-//	//	float4 offset = float4(cos(angle) * 0.1f, -sin(angle) * 1.0f, i, 0.0f);
-//	//	output.pos = vPos1 + offset;
-//	//	output.pos = mul(output.pos, projection);
-//	//}
-//
-//	//for (int i = 0; i <= 100; i++)
-//	//{
-//	//	float ang = 3.14f * 2.0f / 100.0f * i;
-//	//	float4 vPos = input[0].pos;
-//	//	vPos = mul(vPos, model);
-//	//	vPos = mul(vPos, view);
-//
-//	//	 Offset from center point
-//	//	float4 offset = float4(cos(ang) * 0.1f , 1.0f, -sin(ang) * 0.1f, 0.0f);
-//	//	output.pos = input[0].pos + offset;
-//
-//	//	output.pos = mul(output.pos, projection);
-//
-//	//	OutputStream.Append(output);
-//	//}
-//
-//	//float radius = 2.0f;
-//	//// V1
-//	//float4 vPos = input[0].pos;
-//	//vPos = mul(vPos, model);
-//	//vPos = mul(vPos, view);
-//
-//	////output.pos = vPos + float4(radius * cos(3.14f * 2.0f), radius * sin(3.14f * 2.0f), vPos.z, 0.0f);
-//	//output.pos = mul(output.pos, projection);
-//	//output.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
-//
-//	//OutputStream.Append(output);
-//
-//	//// V2
-//	//vPos = input[1].pos;
-//	//vPos = mul(vPos, model);
-//	//vPos = mul(vPos, view);
-//
-//	////output.pos = vPos + float4(radius * cos(3.14f * 2.0f), radius * sin(3.14f * 2.0f), vPos.z, 0.0f);
-//	//output.pos = mul(output.pos, projection);
-//	//output.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
-//
-//	//OutputStream.Append(output);
-//}

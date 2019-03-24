@@ -29,21 +29,33 @@
     <AppXManifest Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2019-03-23T13:29:22.204</Modified>
+      <Modified>2019-03-24T20:22:29.809</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\AdvancedRenderingDefaultProject.exe">
       <PackagePath>AdvancedRenderingDefaultProject.exe</PackagePath>
-      <Modified>2019-03-23T16:32:40.744</Modified>
+      <Modified>2019-03-24T21:03:11.381</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\AdvancedRenderingDefaultProject.winmd">
       <PackagePath>AdvancedRenderingDefaultProject.winmd</PackagePath>
-      <Modified>2019-03-23T13:29:20.704</Modified>
+      <Modified>2019-03-23T17:44:42.086</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Assets\grassBlade.dds">
       <PackagePath>Assets\grassBlade.dds</PackagePath>
       <Modified>2019-03-13T19:12:30.664</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\User\Desktop\rockyDisp.dds">
+      <PackagePath>rockyDisp.dds</PackagePath>
+      <Modified>2019-03-23T17:22:51.377</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\User\Desktop\rockyNormal.dds">
+      <PackagePath>rockyNormal.dds</PackagePath>
+      <Modified>2019-03-23T17:23:28.571</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\snaketex.dds">
+      <PackagePath>snaketex.dds</PackagePath>
+      <Modified>2019-03-24T20:18:24.519</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\AdvancedRenderingDefaultProject\Assets\LockScreenLogo.scale-200.png">
       <PackagePath>Assets\LockScreenLogo.scale-200.png</PackagePath>
@@ -81,47 +93,75 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\SamplePixelShader.cso">
       <PackagePath>SamplePixelShader.cso</PackagePath>
-      <Modified>2019-03-23T13:29:08.124</Modified>
+      <Modified>2019-03-24T19:40:30.587</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\SampleVertexShader.cso">
       <PackagePath>SampleVertexShader.cso</PackagePath>
-      <Modified>2019-03-23T13:29:08.275</Modified>
+      <Modified>2019-03-23T17:44:23.569</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\DomainShader.cso">
       <PackagePath>DomainShader.cso</PackagePath>
-      <Modified>2019-03-23T13:29:08.435</Modified>
+      <Modified>2019-03-24T18:17:24.694</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\GrassPS.cso">
+      <PackagePath>GrassPS.cso</PackagePath>
+      <Modified>2019-03-24T21:00:03.204</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\ParametricPS.cso">
+      <PackagePath>ParametricPS.cso</PackagePath>
+      <Modified>2019-03-24T19:35:44.296</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\ParametricSphereDS.cso">
+      <PackagePath>ParametricSphereDS.cso</PackagePath>
+      <Modified>2019-03-24T18:50:25.740</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\ParametricSphereHS.cso">
+      <PackagePath>ParametricSphereHS.cso</PackagePath>
+      <Modified>2019-03-24T18:19:25.858</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\ParametricVS.cso">
+      <PackagePath>ParametricVS.cso</PackagePath>
+      <Modified>2019-03-24T19:34:38.695</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\ParametricHS.cso">
+      <PackagePath>ParametricHS.cso</PackagePath>
+      <Modified>2019-03-24T16:12:40.842</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\ParametricDS.cso">
+      <PackagePath>ParametricDS.cso</PackagePath>
+      <Modified>2019-03-24T18:45:17.950</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\GrassParticleGS.cso">
       <PackagePath>GrassParticleGS.cso</PackagePath>
-      <Modified>2019-03-23T13:29:08.584</Modified>
+      <Modified>2019-03-24T21:02:04.272</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\HullShader.cso">
       <PackagePath>HullShader.cso</PackagePath>
-      <Modified>2019-03-23T13:29:08.828</Modified>
+      <Modified>2019-03-23T18:36:57.114</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\ImplicitPixelShader.cso">
       <PackagePath>ImplicitPixelShader.cso</PackagePath>
-      <Modified>2019-03-23T13:29:09.844</Modified>
+      <Modified>2019-03-23T18:59:58.579</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\ImplicitVS.cso">
       <PackagePath>ImplicitVS.cso</PackagePath>
-      <Modified>2019-03-23T13:29:10.547</Modified>
+      <Modified>2019-03-23T17:44:25.413</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\SnakeGS.cso">
       <PackagePath>SnakeGS.cso</PackagePath>
-      <Modified>2019-03-23T16:33:29.006</Modified>
+      <Modified>2019-03-24T20:44:42.901</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\SnakePS.cso">
       <PackagePath>SnakePS.cso</PackagePath>
-      <Modified>2019-03-23T16:33:36.528</Modified>
+      <Modified>2019-03-24T20:46:32.952</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\SnakeVS.cso">
       <PackagePath>SnakeVS.cso</PackagePath>
-      <Modified>2019-03-23T16:14:28.327</Modified>
+      <Modified>2019-03-23T17:44:26.037</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\GrassVS.cso">
       <PackagePath>GrassVS.cso</PackagePath>
-      <Modified>2019-03-23T13:29:11.877</Modified>
+      <Modified>2019-03-24T19:07:43.525</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.15063.0\\redist\Debug\x86\ucrtbased.dll">
       <PackagePath>ucrtbased.dll</PackagePath>
@@ -129,7 +169,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Kevin Barr Files\University\ARnVE Material\ACW\AdvancedRenderingACW\ACW\Debug\AdvancedRenderingDefaultProject\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2019-03-23T13:29:22.005</Modified>
+      <Modified>2019-03-24T20:22:29.616</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

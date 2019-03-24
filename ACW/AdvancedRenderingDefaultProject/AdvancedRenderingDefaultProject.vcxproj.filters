@@ -86,6 +86,15 @@
     <Image Include="Assets\grassBlade.dds">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="C:\Users\User\Desktop\rockyDisp.dds">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="C:\Users\User\Desktop\rockyNormal.dds">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="snaketex.dds">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -119,6 +128,27 @@
       <Filter>Content</Filter>
     </FxCompile>
     <FxCompile Include="SnakePS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="ParametricDS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="ParametricHS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="ParametricVS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="ParametricPS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="ParametricSphereHS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="ParametricSphereDS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="GrassPS.hlsl">
       <Filter>Content</Filter>
     </FxCompile>
   </ItemGroup>
