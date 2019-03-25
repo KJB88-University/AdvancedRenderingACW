@@ -83,9 +83,6 @@
     <Image Include="Assets\StoreLogo.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="Assets\grassBlade.dds">
-      <Filter>Assets</Filter>
-    </Image>
     <Image Include="C:\Users\User\Desktop\rockyDisp.dds">
       <Filter>Assets</Filter>
     </Image>
@@ -93,6 +90,27 @@
       <Filter>Assets</Filter>
     </Image>
     <Image Include="snaketex.dds">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="grass1.dds">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="floortex.dds">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="floorNorm.dds">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="mudDisp.dds">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="mudDisprevised.dds">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="skybox.dds">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="metal.dds">
       <Filter>Assets</Filter>
     </Image>
   </ItemGroup>
@@ -149,6 +167,12 @@
       <Filter>Content</Filter>
     </FxCompile>
     <FxCompile Include="GrassPS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="ParametricEllipsoidDS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="ParametricEllipsoidHS.hlsl">
       <Filter>Content</Filter>
     </FxCompile>
   </ItemGroup>

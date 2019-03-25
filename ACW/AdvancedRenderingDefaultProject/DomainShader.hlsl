@@ -25,8 +25,14 @@ struct HS_TRI_Tess_Param
 struct VS_OUTPUT
 {
 	float4 pos : SV_POSITION;
+	float2 uvs : TEXCOORD0;
 };
 
+float mod(float x, float y)
+{
+	return x - y * floor(x / y);
+
+}
 // A constant buffer that stores the three basic column-major matrices for composing geometry.
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
 {
@@ -51,10 +57,16 @@ VS_OUTPUT DS_QuadTess(HS_Quad_Tess_Param input, float2 uv : SV_DomainLocation)
 	float3 uvPos = (1.0f - uv.x) * vPos1 + uv.x * vPos2;
 
 	output.pos = float4(uvPos.x, uvPos.y, uvPos.z, 1);
+	output.uvs = float2(mod(uvPos.x, 1.0f), mod(uvPos.z, 1.0f));
+
+	float disp = dispMap.SampleLevel(Sampler, output.uvs, 0, 0);
+	float dispScale = 0.1f;
+	output.pos.y += (disp * dispScale);
 
 	output.pos = mul(output.pos, model);
 	output.pos = mul(output.pos, view);
 	output.pos = mul(output.pos, projection);
+
 
 	return output;
 }
@@ -67,6 +79,5 @@ VS_OUTPUT DS_TriTess(HS_TRI_Tess_Param input, float3 UVW : SV_DomainLocation)
 	float3 finalPos = UVW.x * QuadPos[0].xyz + UVW.y * QuadPos[2].xyz + UVW.z * QuadPos[1].xyz;
 
 	output.pos = float4(0.6f * finalPos, 1.0f);
-
 	return output;
 }

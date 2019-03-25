@@ -152,6 +152,7 @@ void Sample3DSceneRenderer::Render()
 
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		context->RSSetState(m_filledRasterState.Get());
+		//context->RSSetState(m_wireframeRasterState.Get());
 		context->OMSetDepthStencilState(m_noDepthStencil.Get(), 0);
 		context->OMSetBlendState(m_blend.Get(), 0, 0xffffffff);
 		// FLOOR QUAD
@@ -163,6 +164,11 @@ void Sample3DSceneRenderer::Render()
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 		context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
 		context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+		context->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
+		context->PSSetShaderResources(0, 1, m_floorTex.GetAddressOf());
+		context->PSSetShaderResources(1, 1, m_floorNorm.GetAddressOf());
+		context->PSSetConstantBuffers(0, 1, m_cameraBuffer.GetAddressOf());
+		context->PSSetConstantBuffers(1, 1, m_constantBuffer.GetAddressOf());
 		context->VSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
 
 		context->HSSetShader(m_hullShader.Get(), nullptr, 0);
@@ -170,7 +176,7 @@ void Sample3DSceneRenderer::Render()
 		context->DSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
 		context->DSSetConstantBuffers(1, 1, m_timeBuffer.GetAddressOf());
 		context->DSSetSamplers(0, 1, m_sampler.GetAddressOf());
-		context->DSSetShaderResources(0, 1, m_displacementMap.GetAddressOf());
+		context->DSSetShaderResources(0, 1, m_floorDisp.GetAddressOf());
 
 		context->GSSetShader(NULL, nullptr, 0);
 		context->DrawIndexed(m_indexCount, 0, 0);
@@ -232,27 +238,48 @@ void Sample3DSceneRenderer::Render()
 		context->GSSetShader(m_grassGS.Get(), nullptr, 0);
 		context->GSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
 		context->GSSetConstantBuffers(1, 1, m_timeBuffer.GetAddressOf());
-		context->GSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 		context->PSSetShader(m_grassPS.Get(), nullptr, 0);
+		context->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
 		context->PSSetShaderResources(0, 1, m_grassTexture.GetAddressOf());
 		context->DrawIndexed(m_grassIndexCount, 0, 0);
 		//context->OMSetBlendState(NULL, 0, 0);
 #pragma endregion
 
 //		// PARAMETRIC TORUS
+		context->RSSetState(m_filledNoCullRasterState.Get());
 		context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 		context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
 		context->IASetInputLayout(m_parametricIL.Get());
-		context->RSSetState(m_wireframeRasterState.Get());
 
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 		context->VSSetShader(m_parametricVS.Get(), nullptr, 0);
 		context->PSSetShader(m_parametricPS.Get(), nullptr, 0);
+		context->PSSetShaderResources(0, 1, m_metalTexture.GetAddressOf());
+		context->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
 		context->HSSetShader(m_parametricHS.Get(), nullptr, 0);
 		context->DSSetShader(m_parametricDS.Get(), nullptr, 0);
+		context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+
+		context->GSSetShader(NULL, nullptr, 0);
+		context->DrawIndexed(m_indexCount, 0, 0);
+
+		// PARAMETRIC ELLIPSOID
+		context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+		context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
+		context->IASetInputLayout(m_parametricIL.Get());
+
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+		context->VSSetShader(m_parametricVS.Get(), nullptr, 0);
+		context->PSSetShader(m_parametricPS.Get(), nullptr, 0);
+		context->PSSetShaderResources(0, 1, m_metalTexture.GetAddressOf());
+		context->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
+
+		context->HSSetShader(m_parametricEllipsoidHS.Get(), nullptr, 0);
+		context->DSSetShader(m_parametricEllipsoidDS.Get(), nullptr, 0);
+
 		context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
 		context->GSSetShader(NULL, nullptr, 0);
@@ -263,14 +290,17 @@ void Sample3DSceneRenderer::Render()
 		context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 		context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
 		context->IASetInputLayout(m_parametricIL.Get());
-		context->RSSetState(m_wireframeRasterState.Get());
 
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 		context->VSSetShader(m_parametricVS.Get(), nullptr, 0);
 		context->PSSetShader(m_parametricPS.Get(), nullptr, 0);
+		context->PSSetShaderResources(0, 1, m_metalTexture.GetAddressOf());
+		context->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
 		context->HSSetShader(m_parametricSphereHS.Get(), nullptr, 0);
 		context->DSSetShader(m_parametricSphereDS.Get(), nullptr, 0);
+		context->DSSetSamplers(0, 1, m_sampler.GetAddressOf());
+		context->DSSetShaderResources(0, 1, m_floorDisp.GetAddressOf());
 		context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
 		context->GSSetShader(NULL, nullptr, 0);
@@ -327,6 +357,8 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	auto loadDSTask2 = DX::ReadDataAsync(L"ParametricDS.cso");
 	auto loadHSTask3 = DX::ReadDataAsync(L"ParametricSphereHS.cso");
 	auto loadDSTask3 = DX::ReadDataAsync(L"ParametricSphereDS.cso");
+	auto loadHSTask4 = DX::ReadDataAsync(L"ParametricEllipsoidHS.cso");
+	auto loadDSTask4 = DX::ReadDataAsync(L"ParametricEllipsoidDS.cso");
 
 	// GS
 	auto loadGSParticleTask = DX::ReadDataAsync(L"GrassParticleGS.cso");
@@ -483,6 +515,12 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				&m_pixelShader
 			)
 		);
+
+		// Floor Tex
+		HRESULT result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"floortex.dds", nullptr, &m_floorTex);
+		result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"floorNorm.dds", nullptr, &m_floorNorm);
+		result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"mudDisprevised.dds", nullptr, &m_floorDisp);
+		result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"skybox.dds", nullptr, &m_skyMap);
 	});
 
 	// Implicit Pixel Shader = loadPS
@@ -576,6 +614,18 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		);
 	});
 
+	auto createHSTask4 = loadHSTask4.then([this](std::vector<byte>& fileData)
+	{
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateHullShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_parametricEllipsoidHS
+			)
+		);
+	});
+
 	// Floor Quad Domain Shader
 	auto createDSTask = loadDSTask.then([this](const std::vector<byte>& fileData)
 	{
@@ -600,6 +650,8 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				&m_parametricDS
 			)
 		);
+
+		HRESULT result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"metal.dds", nullptr, &m_metalTexture);
 	});
 
 	// Parametric Sphere Domain Shader
@@ -611,6 +663,19 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				fileData.size(),
 				nullptr,
 				&m_parametricSphereDS
+			)
+		);
+	});
+
+	// Parametric Sphere Domain Shader
+	auto createDSTask4 = loadDSTask4.then([this](const std::vector<byte>&fileData)
+	{
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateDomainShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_parametricEllipsoidDS
 			)
 		);
 	});
@@ -651,7 +716,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	{
 		//const float minX = -0.5f;
 		//const float maxX = 0.5f;
-		const float staticY = 0.02f;
+		const float staticY = 0.04f;
 		//const float minZ = -0.5f;
 		//const float maxZ = 0.5f;
 
@@ -704,14 +769,14 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	{
 		static const VertexPosition snakePoints[] =
 		{
-			XMFLOAT3(-0.5f, 0.2f, -0.8f),
-			XMFLOAT3(-0.5f, 0.2f, -0.6f),
-			XMFLOAT3(-0.5f, 0.2f, -0.4f),
-			XMFLOAT3(-0.5f, 0.2f, -0.2f),
-			XMFLOAT3(-0.5f, 0.2f, 0.0f),
-			XMFLOAT3(-0.5f, 0.2f, 0.2f),
-			XMFLOAT3(-0.5f, 0.2f, 0.4f),
-			XMFLOAT3(-0.5f, 0.2f, 0.6f)
+			XMFLOAT3(-0.5f, 0.05f, -0.8f),
+			XMFLOAT3(-0.5f, 0.05f, -0.6f),
+			XMFLOAT3(-0.5f, 0.05f, -0.4f),
+			XMFLOAT3(-0.5f, 0.05f, -0.2f),
+			XMFLOAT3(-0.5f, 0.05f, 0.0f),
+			XMFLOAT3(-0.5f, 0.05f, 0.2f),
+			XMFLOAT3(-0.5f, 0.05f, 0.4f),
+			XMFLOAT3(-0.5f, 0.05f, 0.6f)
 		};
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
@@ -756,14 +821,14 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	{
 		static const VertexPosition snakePoints[] =
 		{
-			XMFLOAT3(0.5f, 0.2f, -0.8f),
-			XMFLOAT3(0.5f, 0.2f, -0.6f),
-			XMFLOAT3(0.5f, 0.2f, -0.4f),
-			XMFLOAT3(0.5f, 0.2f, -0.2f),
-			XMFLOAT3(0.5f, 0.2f, 0.0f),
-			XMFLOAT3(0.5f, 0.2f, 0.2f),
-			XMFLOAT3(0.5f, 0.2f, 0.4f),
-			XMFLOAT3(0.5f, 0.2f, 0.6f)
+			XMFLOAT3(0.5f, 0.05f, -0.8f),
+			XMFLOAT3(0.5f, 0.05f, -0.6f),
+			XMFLOAT3(0.5f, 0.05f, -0.4f),
+			XMFLOAT3(0.5f, 0.05f, -0.2f),
+			XMFLOAT3(0.5f, 0.05f, 0.0f),
+			XMFLOAT3(0.5f, 0.05f, 0.2f),
+			XMFLOAT3(0.5f, 0.05f, 0.4f),
+			XMFLOAT3(0.5f, 0.05f, 0.6f)
 		};
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
@@ -874,9 +939,6 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				m_indexBuffer.GetAddressOf()
 			)
 		);
-
-		 HRESULT result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"rockyDisp.dds", nullptr, &m_displacementMap);
-		 result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"rockyNormal.dds", nullptr, &m_normalMap);
 	});
 
 	// Implicit Placeholder 'Mesh'
@@ -1021,7 +1083,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;

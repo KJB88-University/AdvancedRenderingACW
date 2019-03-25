@@ -28,7 +28,14 @@ static float3 TriPos[3] =
 struct VS_OUTPUT
 {
 	float4 pos : SV_POSITION;
+	float2 uvs : TEXCOORD0;
 };
+
+float mod(float x, float y)
+{
+	return x - y * floor(x / y);
+
+}
 
 [domain("tri")]
 VS_OUTPUT main(HS_TRI_Tess_Param input, float3 UVW : SV_DomainLocation)
@@ -38,6 +45,8 @@ VS_OUTPUT main(HS_TRI_Tess_Param input, float3 UVW : SV_DomainLocation)
 	float3 finalPos = UVW.x * TriPos[0] +
 		UVW.y * TriPos[1] +
 		UVW.z * TriPos[2];
+	float3 uvPos = (1.0f - UVW.x) * finalPos + UVW.x * finalPos;
+	output.uvs = float2(mod(uvPos.x, 1.0f), mod(uvPos.y, 1.0f));
 
 	float c = 0.25f;
 	float a = 0.1f;

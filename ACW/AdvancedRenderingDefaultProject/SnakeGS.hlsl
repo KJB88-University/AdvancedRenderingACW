@@ -23,6 +23,11 @@ struct PixelShaderInput
 	float2 uv : TEXCOORD0;
 };
 
+float mod(float x, float y)
+{
+	return x - y * floor(x / y);
+}
+
 [maxvertexcount(112)]
 void GS_main(line GeometryShaderInput input[2], inout TriangleStream<PixelShaderInput> OutputStream)
 {
@@ -56,7 +61,7 @@ void GS_main(line GeometryShaderInput input[2], inout TriangleStream<PixelShader
 			}
 			
 			output.pos = input[0].pos + offset;
-			output.uv = float2(fmod(output.pos.x, 1.0), fmod(output.pos.z, 1.0));
+			output.uv = float2(mod(output.pos.x, 1.0), mod(output.pos.z, 1.0));
 
 			output.pos = mul(output.pos, model);
 			output.pos = mul(output.pos, view);
@@ -84,7 +89,7 @@ void GS_main(line GeometryShaderInput input[2], inout TriangleStream<PixelShader
 			}
 
 			output.pos = input[1].pos + offset;
-			output.uv = float2(fmod(output.pos.x, 1.0), fmod(output.pos.z, 1.0));
+			output.uv = float2(mod(output.pos.x, 1.0), mod(output.pos.z, 1.0));
 
 			output.pos = mul(output.pos, model);
 			output.pos = mul(output.pos, view);

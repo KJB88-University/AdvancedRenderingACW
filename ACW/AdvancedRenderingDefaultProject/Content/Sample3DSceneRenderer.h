@@ -37,10 +37,10 @@ namespace AdvancedRenderingDefaultProject
 		Microsoft::WRL::ComPtr<ID3D11PixelShader>	m_pixelShader;
 		Microsoft::WRL::ComPtr<ID3D11HullShader> m_hullShader;
 		Microsoft::WRL::ComPtr<ID3D11DomainShader> m_domainShader;
-
-		// http://spiralgraphics.biz/packs/terrain_civilization/index.htm?14
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_displacementMap;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_normalMap;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_floorTex;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_floorNorm;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_floorDisp;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_skyMap;
 		uint32	m_indexCount;
 
 		// Particle Grass
@@ -81,11 +81,16 @@ namespace AdvancedRenderingDefaultProject
 		Microsoft::WRL::ComPtr<ID3D11DomainShader> m_parametricDS;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_parametricBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_parametricIndexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_metalTexture;
 		uint32 m_parametricIndexCount;
 
 		// Parametric Sphere Object
 		Microsoft::WRL::ComPtr<ID3D11HullShader> m_parametricSphereHS;
 		Microsoft::WRL::ComPtr<ID3D11DomainShader> m_parametricSphereDS;
+
+		// Param Ellipsoid
+		Microsoft::WRL::ComPtr<ID3D11HullShader> m_parametricEllipsoidHS;
+		Microsoft::WRL::ComPtr<ID3D11DomainShader> m_parametricEllipsoidDS;
 
 		// Constant Buffers
 		ModelViewProjectionConstantBuffer	m_constantBufferData;
