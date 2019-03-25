@@ -41,7 +41,6 @@ namespace AdvancedRenderingDefaultProject
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_floorTex;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_floorNorm;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_floorDisp;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_skyMap;
 		uint32	m_indexCount;
 
 		// Particle Grass

@@ -22,7 +22,7 @@ struct VS_OUTPUT
 VS_OUTPUT main(VertexShaderInput input)
 {
 	VS_OUTPUT output;
-	output.pos = sin(float4(input.pos.x, input.pos.y, input.pos.z, 1.0f));
+	output.pos = float4(input.pos.x, input.pos.y, input.pos.z, 1.0f);
 
 	return output;
 }

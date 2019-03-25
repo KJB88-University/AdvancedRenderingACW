@@ -253,7 +253,7 @@ void Sample3DSceneRenderer::Render()
 		//context->OMSetBlendState(NULL, 0, 0);
 #pragma endregion
 
-//		// PARAMETRIC TORUS
+		// PARAMETRIC TORUS
 		context->RSSetState(m_filledNoCullRasterState.Get());
 		context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 		context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, .0);
@@ -611,7 +611,6 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		HRESULT result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"floortex.dds", nullptr, &m_floorTex);
 		result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"floorNorm.dds", nullptr, &m_floorNorm);
 		result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"mudDisprevised.dds", nullptr, &m_floorDisp);
-		result = CreateDDSTextureFromFile(m_deviceResources->GetD3DDevice(), L"skybox.dds", nullptr, &m_skyMap);
 	});
 
 	// Implicit Pixel Shader = loadPS
