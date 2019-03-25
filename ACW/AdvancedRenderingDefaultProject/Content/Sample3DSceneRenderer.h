@@ -20,7 +20,8 @@ namespace AdvancedRenderingDefaultProject
 		void TrackingUpdate(float positionX);
 		void StopTracking();
 		bool IsTracking() { return m_tracking; }
-
+		void KeyDown(const int keyCode);
+		void KeyUp(const int keyCode);
 
 	private:
 		void Rotate(float radians);
@@ -87,6 +88,7 @@ namespace AdvancedRenderingDefaultProject
 		// Parametric Sphere Object
 		Microsoft::WRL::ComPtr<ID3D11HullShader> m_parametricSphereHS;
 		Microsoft::WRL::ComPtr<ID3D11DomainShader> m_parametricSphereDS;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> m_parametricSpherePS;
 
 		// Param Ellipsoid
 		Microsoft::WRL::ComPtr<ID3D11HullShader> m_parametricEllipsoidHS;
@@ -97,12 +99,13 @@ namespace AdvancedRenderingDefaultProject
 		TimeBuffer m_timeBufferData;
 		CameraBuffer m_cameraBufferData;
 		ControlBuffer m_controlBufferData;
+		DisplacementBuffer m_displacementBufferData;
 
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_constantBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_timeBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_cameraBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_controlBuffer;
-
+		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_displacementBuffer;
 		// Rasterizer States
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_wireframeRasterState;
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_filledRasterState;
@@ -124,6 +127,8 @@ namespace AdvancedRenderingDefaultProject
 		float m_isDeforming = 0;
 		float m_isFractal = 0;
 		float m_isShiny = 0;
+
+		float m_displacementFactor = 0.01f;
 
 		// Variables used with the rendering loop.
 		bool	m_loadingComplete;

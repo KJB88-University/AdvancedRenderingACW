@@ -12,6 +12,5 @@ struct PixelShaderInput
 float4 main(PixelShaderInput input) : SV_TARGET
 {
 	float4 texColor = metalTex.Sample(Sampler, input.uvs, 0);
-
 	return texColor;
 }

@@ -19,6 +19,8 @@ namespace AdvancedRenderingDefaultProject
 		bool Render();
 
 		// IDeviceNotify
+		void AdvancedRenderingDefaultProjectMain::KeyDown(const int keyCode);
+		void AdvancedRenderingDefaultProjectMain::KeyUp(const int keyCode);
 		virtual void OnDeviceLost();
 		virtual void OnDeviceRestored();
 

@@ -21,6 +21,11 @@ namespace AdvancedRenderingDefaultProject
 		DirectX::XMFLOAT4 booleans;
 	};
 
+	struct DisplacementBuffer
+	{
+		DirectX::XMFLOAT4 displacementFactor;
+	};
+
 	struct CameraBuffer
 	{
 		DirectX::XMFLOAT4 eyePos;

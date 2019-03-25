@@ -9,6 +9,11 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
 	matrix projection;
 };
 
+cbuffer DisplacementBuffer : register(b1)
+{
+	float4 displacementFactor;
+};
+
 struct HS_TRI_Tess_Param
 {
 	float Edges[3] : SV_TessFactor;
@@ -57,11 +62,10 @@ VS_OUTPUT main(HS_TRI_Tess_Param input, float3 UVW : SV_DomainLocation)
 	// END SPHERE
 
 	finalPos = float3(x, y + 0.25, z);
-
 	output.uvs = float2(mod(finalPos.x, 1.0f), mod(finalPos.z, 1.0f));
 
 	float disp = dispMap.SampleLevel(Sampler, output.uvs, 0, 0);
-	float dispScale = 0.01f;
+	float dispScale = displacementFactor.x;
 	finalPos += (disp * dispScale);
 
 	//finalPos = float3(x, y, z);

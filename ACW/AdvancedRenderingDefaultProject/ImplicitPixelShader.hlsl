@@ -254,7 +254,7 @@ float sceneDistFunc(float3 samplePoint)
 	// No modifiers
 	else
 	{
-		float cubeOffset = -3.0f;
+		float cubeOffset = -2.0f;
 		float torusOffset = 5.0f;
 		float octaOffset = 3.0f;
 		float hexOffset = 3.0f;

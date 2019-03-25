@@ -175,5 +175,8 @@
     <FxCompile Include="ParametricEllipsoidHS.hlsl">
       <Filter>Content</Filter>
     </FxCompile>
+    <FxCompile Include="ParametricSpherePS.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

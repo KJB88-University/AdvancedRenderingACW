@@ -77,9 +77,14 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 	m_isRepeating = 0;
 	m_isDeforming = 0;
 	m_isFractal = 0;
+	m_isShiny = 0;
 
 	// Load the control CB
 	XMStoreFloat4(&m_controlBufferData.booleans, XMVECTORF32{ m_isRepeating, m_isDeforming, m_isFractal, m_isShiny });
+
+	XMFLOAT4 displacementFactor = XMFLOAT4(0.01f, 0.0f, 0.0f, 1.0f);
+
+	XMStoreFloat4(&m_displacementBufferData.displacementFactor, XMVECTORF32{ 0.01f, 0.0f, 0.0f, 1.0f });
 }
 
 // Called once per frame, rotates the cube and calculates the model and view matrices.
@@ -142,6 +147,7 @@ void Sample3DSceneRenderer::Render()
 	context->UpdateSubresource1(m_timeBuffer.Get(), 0, NULL, &m_timeBufferData, 0, 0, 0);
 	context->UpdateSubresource1(m_cameraBuffer.Get(), 0, NULL, &m_cameraBufferData, 0, 0, 0);
 	context->UpdateSubresource1(m_controlBuffer.Get(), 0, NULL, &m_controlBufferData, 0, 0, 0);
+	context->UpdateSubresource1(m_displacementBuffer.Get(), 0, NULL, &m_displacementBufferData, 0, 0, 0);
 
 	UINT stride;
 	UINT offset;
@@ -182,7 +188,7 @@ void Sample3DSceneRenderer::Render()
 		context->DrawIndexed(m_indexCount, 0, 0);
 #pragma endregion
 
-	// SNAKE POLYLINE
+		// SNAKE POLYLINE
 #pragma region SNAKE
 	// ia
 		stride = sizeof(VertexPosition);
@@ -219,7 +225,7 @@ void Sample3DSceneRenderer::Render()
 		context->DrawIndexed(m_snakeIndexCount, 0, 0);
 #pragma endregion
 
-//		// PARTICLES
+		//		// PARTICLES
 #pragma region PARTICLES
 		stride = sizeof(VertexPosition);
 		offset = 0;
@@ -293,7 +299,7 @@ void Sample3DSceneRenderer::Render()
 
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 		context->VSSetShader(m_parametricVS.Get(), nullptr, 0);
-		context->PSSetShader(m_parametricPS.Get(), nullptr, 0);
+		context->PSSetShader(m_parametricSpherePS.Get(), nullptr, 0);
 		context->PSSetShaderResources(0, 1, m_metalTexture.GetAddressOf());
 		context->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
@@ -302,6 +308,7 @@ void Sample3DSceneRenderer::Render()
 		context->DSSetSamplers(0, 1, m_sampler.GetAddressOf());
 		context->DSSetShaderResources(0, 1, m_floorDisp.GetAddressOf());
 		context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+		context->DSSetConstantBuffers1(1, 1, m_displacementBuffer.GetAddressOf(), nullptr, nullptr);
 
 		context->GSSetShader(NULL, nullptr, 0);
 		context->DrawIndexed(m_indexCount, 0, 0);
@@ -333,6 +340,89 @@ void Sample3DSceneRenderer::Render()
 	}
 }
 
+void Sample3DSceneRenderer::KeyDown(const int keyCode)
+{
+	// Implicit / Explicit
+	if (keyCode == 49) // 1
+	{
+		m_isImplicit = !m_isImplicit;
+	}
+
+	// Repeating
+	if (keyCode == 50) // 2
+	{
+		if (m_isImplicit)
+		{
+			m_isFractal = 0;
+			m_isShiny = 0;
+			m_isDeforming = 0;
+			m_isRepeating = 1;
+		}
+	}
+
+	// Deforming
+	if (keyCode == 51) // 3
+	{
+		if (m_isImplicit)
+		{
+			m_isFractal = 0;
+			m_isShiny = 0;
+			m_isDeforming = 1;
+			m_isRepeating = 0;
+		}
+	}
+
+	// Fractal
+	if (keyCode == 52) // 4
+	{
+		if (m_isImplicit)
+		{
+			m_isFractal = 1;
+			m_isShiny = 0;
+			m_isDeforming = 0;
+			m_isRepeating = 0;
+		}
+	}
+
+	// Shiny
+	if (keyCode == 53) // 5
+	{
+		if (m_isImplicit)
+		{
+			m_isFractal = 0;
+			m_isShiny = 1;
+			m_isDeforming = 0;
+			m_isRepeating = 0;
+		}
+	}
+
+	if (keyCode == 54) // 6
+	{
+		if (m_isImplicit)
+		{
+			m_isFractal = 0;
+			m_isShiny = 0;
+			m_isDeforming = 0;
+			m_isRepeating = 0;
+		}
+	}
+	// Increase displacement
+	if (keyCode == 55) // 7
+	{
+		m_displacementFactor += 0.01f;
+	}
+
+	// Decrease displacement
+	if (keyCode == 56) // 8
+	{
+		m_displacementFactor -= 0.01f;
+	}
+
+	// Load the control CB
+	XMStoreFloat4(&m_controlBufferData.booleans, XMVECTORF32{ m_isRepeating, m_isDeforming, m_isFractal, m_isShiny });
+	XMStoreFloat4(&m_displacementBufferData.displacementFactor, XMVECTORF32{ m_displacementFactor, 0.0f, 0.0f, 1.0f });
+}
+
 void Sample3DSceneRenderer::CreateDeviceDependentResources()
 {
 	// Load shaders asynchronously.
@@ -349,6 +439,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	auto loadPSTask3 = DX::ReadDataAsync(L"SnakePS.cso");
 	auto loadPSTask4 = DX::ReadDataAsync(L"ParametricPS.cso");
 	auto loadPSTask5 = DX::ReadDataAsync(L"GrassPS.cso");
+	auto loadPSTask6 = DX::ReadDataAsync(L"ParametricSpherePS.cso");
 
 	// HS & DS
 	auto loadHSTask = DX::ReadDataAsync(L"HullShader.cso");
@@ -575,6 +666,19 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		);
 	});
 
+	// Param Sphere PS
+	auto createPSTask6 = loadPSTask6.then([this](std::vector<byte>& fileData)
+	{
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreatePixelShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_parametricSpherePS
+			)
+		);
+	});
+
 	// Floor Quad Hull Shader
 	auto createHSTask = loadHSTask.then([this](const std::vector<byte>& fileData)
 	{
@@ -728,7 +832,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		std::uniform_real_distribution<float> distrib(-0.95f, 0.95f);
 		for (int i = 0; i < 200; i++)
 		{
-			grassPointsRandom[i] = 
+			grassPointsRandom[i] =
 				VertexPosition{ XMFLOAT3(distrib(mt), staticY, distrib(mt)) };
 
 			grassPointIndices[i] = i;
@@ -869,7 +973,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 			)
 		);
 	});
-	
+
 	// Floor Quad Mesh
 	auto createCubeTask = (createPSTask && createVSTask && createHSTask && createDSTask && createGSParticleTask && createVSTask2 && createVSTask3 && createSnakeGSTask && createDSTask2 && createHSTask2 && createDSTask3 && createHSTask3).then([this]() {
 
@@ -1062,8 +1166,18 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		)
 	);
 
-	// Sampler
-	D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC(D3D11_DEFAULT);
+	CD3D11_BUFFER_DESC displacementBufferDesc(sizeof(DisplacementBuffer), D3D11_BIND_CONSTANT_BUFFER);
+	DX::ThrowIfFailed(
+		{
+			m_deviceResources->GetD3DDevice()->CreateBuffer(
+					&displacementBufferDesc,
+					nullptr,
+					m_displacementBuffer.GetAddressOf()
+			)
+		});
+
+		// Sampler
+		D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC(D3D11_DEFAULT);
 	DX::ThrowIfFailed(
 		m_deviceResources->GetD3DDevice()->CreateSamplerState(&samplerDesc, m_sampler.GetAddressOf()));
 

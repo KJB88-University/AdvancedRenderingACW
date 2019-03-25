@@ -84,6 +84,11 @@ bool AdvancedRenderingDefaultProjectMain::Render()
 	return true;
 }
 
+void AdvancedRenderingDefaultProjectMain::KeyDown(const int keyCode)
+{
+	m_sceneRenderer->KeyDown(keyCode);
+}
+
 // Notifies renderers that device resources need to be released.
 void AdvancedRenderingDefaultProjectMain::OnDeviceLost()
 {
